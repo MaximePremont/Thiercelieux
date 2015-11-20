@@ -1,0 +1,11 @@
+name: WereWolves
+description: Loups Garous
+main: net.samagames.werewolves.WWPlugin
+version: 1.0
+author: Rigner
+depend: [SamaGamesAPI]
+
+commands:
+  game:
+    description:
+    usage:
