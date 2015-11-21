@@ -25,7 +25,7 @@ public class WereWolf extends WWClass
 	
 	public WereWolf()
 	{
-		super("werewolf", "Les", "&8&lLoup-Garou", new ItemStack(Material.ROTTEN_FLESH), new String[]{"La nuit, décidez d'une victime à dévorer !"}, new WereWolfDisguise());
+		super("werewolf", "Les", "&8&lLoup-Garou", new ItemStack(Material.ROTTEN_FLESH), new String[]{"La nuit, décidez d'une victime à dévorer. Miam"}, new WereWolfDisguise());
 		choices = new HashMap<UUID, UUID>();
 	}
 
@@ -101,7 +101,7 @@ public class WereWolf extends WWClass
 	{
 		if (target.isSpectator() || target.isModerator() || !target.isOnline())
 		{
-			source.getPlayerIfOnline().sendMessage(ChatColor.RED + "Ce joueur est déconnecté !");
+			source.getPlayerIfOnline().sendMessage(ChatColor.RED + "Ce joueur est déconnecté.");
 			return ;
 		}
 		if (choices.containsKey(source.getUUID()))

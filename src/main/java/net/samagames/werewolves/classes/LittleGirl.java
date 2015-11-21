@@ -7,7 +7,7 @@ public class LittleGirl extends WWClass
 {
 	public LittleGirl()
 	{
-		super("littlegirl", "La", "Petite-Fille", new ItemStack(Material.RED_ROSE), new String[]{"Durant la nuit, espionnez les loups-garous !"}, null);
+		super("littlegirl", "La", "Petite-Fille", new ItemStack(Material.RED_ROSE), new String[]{"Durant la nuit, espionnez les loups-garous"}, null);
 	}
 
 	@Override

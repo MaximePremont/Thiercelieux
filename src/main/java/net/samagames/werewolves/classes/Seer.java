@@ -14,7 +14,7 @@ public class Seer extends WWClass
 	
 	protected Seer()
 	{
-		super("seer", "La", "&5Voyante", new ItemStack(Material.EYE_OF_ENDER), new String[]{"Une fois par nuit, regardez le", "rôle d'un autre joueur !"}, null);
+		super("seer", "La", "&5Voyante", new ItemStack(Material.EYE_OF_ENDER), new String[]{"Une fois par nuit, regardez le", "rôle d'un autre joueur"}, null);
 		locked = false;
 	}
 

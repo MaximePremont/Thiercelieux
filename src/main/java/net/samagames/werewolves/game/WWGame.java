@@ -35,7 +35,7 @@ public abstract class WWGame extends Game<WWPlayer>
 	
 	protected WWGame(WWPlugin plugin)
 	{
-		super("werewolves", "Loups Garous", "Inspiré du vrai jeu de cartes !", WWPlayer.class);
+		super("werewolves", "Loups Garous", "Inspiré du vrai jeu de cartes", WWPlayer.class);
 		this.plugin = plugin;
 		this.state = GameState.WAITING;
 		world = plugin.getServer().getWorlds().get(0);
@@ -157,11 +157,16 @@ public abstract class WWGame extends Game<WWPlayer>
 		passtask = plugin.getServer().getScheduler().runTaskTimer(plugin, new TurnPassTask(plugin, classes[currentevent], true), 20L, 20L);
 	}
 	
+	public void nextDayEvent()
+	{
+		
+	}
+	
 	private void showDeads()
 	{
 		if (deaths.isEmpty())
 		{
-			broadcastMessage(this.coherenceMachine.getGameTag() + " Personne n'est mort cette nuit !");
+			broadcastMessage(this.coherenceMachine.getGameTag() + " Personne n'est mort cette nuit.");
 			return ;
 		}
 		StringBuilder sb = new StringBuilder(this.coherenceMachine.getGameTag() + " Victime" + (deaths.size() == 1 ? "" : "s") + " de cette nuit : ");
@@ -261,6 +266,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			p.teleport(plugin.getRandomSpawn());
 		}
 		world.setTime(3000L);
+		currentevent = -1;
 	}
 	
 	@Override

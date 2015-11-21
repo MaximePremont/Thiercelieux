@@ -34,8 +34,8 @@ public class TurnPassTask implements Runnable
 			broadcastActionBarMessage(ChatColor.RED + "Temps écoulé !");
 			if (night)
 				plugin.getGame().nextNightEvent();
-			//else
-			//	plugin.getGame().nextDayEvent();
+			else
+				plugin.getGame().nextDayEvent();
 		}
 	}
 	
