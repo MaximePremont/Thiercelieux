@@ -23,12 +23,20 @@ public class TurnPassTask implements Runnable
 		time = clazz.getMaximumDelay();
 	}
 	
+	public TurnPassTask(WWPlugin plugin, int time, boolean night)
+	{
+		this.plugin = plugin;
+		this.time = time;
+		this.night = night;
+		this.clazz = null;
+	}
+	
 	@Override
 	public void run()
 	{
 		time--;
 		broadcastActionBarMessage(ChatColor.RED + "Temps restant : " + (time >= 600 ? "" : "0") + (time / 60) + ":" + (time % 60 < 10 ? "0" : "") + (time % 60));
-		if (time <= 0 && plugin.getGame().isCurrentlyPlayed(clazz))
+		if (time <= 0 && (clazz == null || plugin.getGame().isCurrentlyPlayed(clazz)))
 		{
 			plugin.getGame().broadcastMessage(ChatColor.RED + "Temps écoulé !");
 			broadcastActionBarMessage(ChatColor.RED + "Temps écoulé !");
@@ -44,7 +52,8 @@ public class TurnPassTask implements Runnable
 		for (WWPlayer player : plugin.getGame().getInGamePlayers().values())
 		{
 			Player p = player.getPlayerIfOnline();
-			PacketUtils.sendActionBarMessage(p, msg);
+			if (p != null)
+				PacketUtils.sendActionBarMessage(p, msg);
 		}
 	}
 }

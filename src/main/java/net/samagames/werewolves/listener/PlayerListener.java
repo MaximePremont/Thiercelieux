@@ -63,6 +63,22 @@ public class PlayerListener implements Listener
 			ev.getPlayer().openInventory(i);
 			return ;
 		}
+		if (ev.getItem().getType() == ItemsUtil.SELECTOR.getType() && (plugin.getGame().getGameState() == GameState.DAY_1 || plugin.getGame().getGameState() == GameState.DAY_2))
+		{
+			ev.setCancelled(true);
+			WWPlayer wwp = plugin.getGame().getPlayer(ev.getPlayer().getUniqueId());
+			if (wwp == null || wwp.isModerator() || wwp.isSpectator())
+				return ;
+			Inventory i = plugin.getServer().createInventory(null, 27, "Sélecteur");
+			for (WWPlayer player : plugin.getGame().getInGamePlayers().values())
+			{
+				if (player.isModerator() || player.isSpectator() || !player.isOnline())
+					continue ;
+				i.addItem(ItemsUtil.createHead(player.getOfflinePlayer().getName()));
+			}
+			ev.getPlayer().openInventory(i);
+			return ;
+		}
 		if (plugin.getGame().getGameState() == GameState.NIGHT && (ev.getAction() == Action.LEFT_CLICK_BLOCK || ev.getAction() == Action.RIGHT_CLICK_BLOCK))
 		{
 			WWPlayer player = plugin.getGame().getPlayer(ev.getPlayer().getUniqueId());
@@ -124,9 +140,18 @@ public class PlayerListener implements Listener
 		{
 			String name = ((SkullMeta)ev.getCurrentItem().getItemMeta()).getOwner();
 			Player p2 = plugin.getServer().getPlayerExact(name);
+			if (p2 == null)
+				return ;
 			WWPlayer wwp2 = plugin.getGame().getPlayer(p2.getUniqueId());
-			if (wwp.getPlayedClass() != null)
-				wwp.getPlayedClass().handlePlayerClick(plugin, wwp, wwp2);
+			if (wwp2 == null || wwp2.isModerator() || wwp2.isSpectator())
+				return ;
+			if (plugin.getGame().getGameState() == GameState.NIGHT)
+			{
+				if (wwp.getPlayedClass() != null)
+					wwp.getPlayedClass().handlePlayerClick(plugin, wwp, wwp2);
+			}
+			else if (plugin.getGame().getGameState() == GameState.DAY_1 || plugin.getGame().getGameState() == GameState.DAY_2)
+				plugin.getGame().handleDayVote(wwp, wwp2);
 		}
 	}
 }

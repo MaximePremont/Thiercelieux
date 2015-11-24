@@ -46,7 +46,11 @@ public class SamaBOTConnector
 			serverSocket.close();
 			if (message.equals(NOK))
 				return null;
-			return Arrays.copyOfRange(message.split(" "), 1, message.length());
+			String[] result = message.split(":");
+			System.out.println((result.length - 1) + " players online on TeamSpeak");
+			for (int i = 1; i < result.length; i++)
+				System.out.println("  > " + result[i]);
+			return Arrays.copyOfRange(result, 1, result.length);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,29 +60,31 @@ public class SamaBOTConnector
 	private static final InetAddress getInternalIpv4() throws IOException
     {
         NetworkInterface i = NetworkInterface.getByName("venet0:0");//FOR MY DEV VPS
-        for (Enumeration<InetAddress> en2 = i.getInetAddresses(); en2.hasMoreElements(); )
-        {
-            InetAddress addr = (InetAddress) en2.nextElement();
-            if (!addr.isLoopbackAddress())
-            {
-                if (addr instanceof Inet4Address)
-                {
-                    return addr;
-                }
-            }
-        }
+        if (i != null)
+	        for (Enumeration<InetAddress> en2 = i.getInetAddresses(); en2.hasMoreElements(); )
+	        {
+	            InetAddress addr = (InetAddress) en2.nextElement();
+	            if (!addr.isLoopbackAddress())
+	            {
+	                if (addr instanceof Inet4Address)
+	                {
+	                    return addr;
+	                }
+	            }
+	        }
         i = NetworkInterface.getByName("eth0");//FOR SG
-        for (Enumeration<InetAddress> en2 = i.getInetAddresses(); en2.hasMoreElements(); )
-        {
-            InetAddress addr = (InetAddress) en2.nextElement();
-            if (!addr.isLoopbackAddress())
-            {
-                if (addr instanceof Inet4Address)
-                {
-                    return addr;
-                }
-            }
-        }
+        if (i != null)
+	        for (Enumeration<InetAddress> en2 = i.getInetAddresses(); en2.hasMoreElements(); )
+	        {
+	            InetAddress addr = (InetAddress) en2.nextElement();
+	            if (!addr.isLoopbackAddress())
+	            {
+	                if (addr instanceof Inet4Address)
+	                {
+	                    return addr;
+	                }
+	            }
+	        }
         InetAddress inet = Inet4Address.getLocalHost();
         return inet;
     }

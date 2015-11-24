@@ -1,7 +1,10 @@
 package net.samagames.werewolves.game;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
+import net.samagames.tssamabot.SamaBOTConnector;
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.classes.WWClass;
 
@@ -41,10 +44,51 @@ public class VocalGame extends WWGame
 	@Override
 	public void startGame()
 	{
+		if (this.isGameStarted())
+			return ;
+		List<String> list = new ArrayList<String>();
+		for (WWPlayer player : this.getInGamePlayers().values())
+		{
+			if (player.isModerator() || player.isSpectator() || !player.isOnline())
+				continue ;
+			list.add(player.getOfflinePlayer().getName());
+		}
+		String[] names = new String[list.size()];
+		int i = 0;
+		for (String n : list)
+		{
+			names[i] = n;
+			i++;
+		}
+		this.broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.YELLOW + " Création d'un channel sur TeamSpeak ...");
+		this.broadcastMessage(ChatColor.RED + " /!\\ Si vous n'êtes pas sur le TeamSpeak (ts.samagames.net), vous serez ejecté de la partie.");
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
-			//String[] players = SamaBOTConnector.createChannel(plugin.getApi().getServerName().split("_")[1], null);
-			//TODO
-			super.startGame();
+			String[] players = SamaBOTConnector.createChannel(plugin.getApi().getServerName().split("_")[1].substring(0, 8).toUpperCase(), names);
+			if (players == null)
+			{
+				for (WWPlayer player : this.getInGamePlayers().values())
+				{
+					if (!player.isOnline())
+						continue ;
+					plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getApi().getGameManager().kickPlayer(player.getPlayerIfOnline(), "Impossible de créer le channel. Contactez un administrateur."));
+				}
+				plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().shutdown());
+			}
+			else
+			{
+				for (WWPlayer player : this.getInGamePlayers().values())
+				{
+					if (player.isModerator() || player.isSpectator() || !player.isOnline())
+						continue ;
+					boolean kick = true;
+					for (int j = 0; j < players.length; j++)
+						if (players[j].equalsIgnoreCase(player.getOfflinePlayer().getName()))
+							kick = false;
+					if (kick)
+						plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getApi().getGameManager().kickPlayer(player.getPlayerIfOnline(), "Vous n'êtes pas sur TeamSpeak (ts.samagames.net) ou alors vous n'avez pas le même pseudo."));
+				}
+				plugin.getServer().getScheduler().runTask(plugin, () -> super.startGame());
+			}
 		});
 	}
 }

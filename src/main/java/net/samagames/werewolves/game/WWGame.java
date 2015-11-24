@@ -1,11 +1,13 @@
 package net.samagames.werewolves.game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 import net.samagames.api.games.Game;
 import net.samagames.tools.Titles;
@@ -32,6 +34,7 @@ public abstract class WWGame extends Game<WWPlayer>
 	protected int currentevent;
 	protected List<WWPlayer> deaths;
 	protected BukkitTask passtask;
+	protected Map<UUID, UUID> votes;
 	
 	protected WWGame(WWPlugin plugin)
 	{
@@ -41,6 +44,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		world = plugin.getServer().getWorlds().get(0);
 		deaths = new ArrayList<WWPlayer>();
 		passtask = null;
+		votes = new HashMap<UUID, UUID>();
 	}
 
 	public void giveWaitingInventory(Player p)
@@ -159,17 +163,47 @@ public abstract class WWGame extends Game<WWPlayer>
 	
 	public void nextDayEvent()
 	{
-		
+		this.cancelPassTask();
+		currentevent++;
+		if (currentevent > 0)
+		{
+			//TODO
+			if (currentevent == 2)//|| ...
+			{
+				showDeads();
+				startNight();
+				return ;
+			}
+		}
+		votes.clear();
+		for (WWPlayer player : this.getInGamePlayers().values())
+		{
+			if (!(player.isModerator() || !player.isOnline() || player.isSpectator()))
+				votes.put(player.getUUID(), null);
+		}
+		passtask = plugin.getServer().getScheduler().runTaskTimer(plugin, new TurnPassTask(plugin, 90, false), 20L, 20L);
+	}
+	
+	public void handleDayVote(WWPlayer source, WWPlayer target)
+	{
+		if (getGameState() != GameState.DAY_1 && getGameState() != GameState.DAY_2)
+			return ;
+		if (votes.containsKey(source.getUUID()))
+		{
+			votes.put(source.getUUID(), target.getUUID());
+			broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.WHITE + " " + ChatColor.BOLD + source.getOfflinePlayer().getName() + ChatColor.WHITE + " a voté pour " + ChatColor.BOLD + target.getOfflinePlayer().getName());
+		}
 	}
 	
 	private void showDeads()
 	{
+		String day = this.getGameState() == GameState.NIGHT ? "cette nuit" : "aujourd'hui";
 		if (deaths.isEmpty())
 		{
-			broadcastMessage(this.coherenceMachine.getGameTag() + " Personne n'est mort cette nuit.");
+			broadcastMessage(this.coherenceMachine.getGameTag() + " Personne n'est mort " + day + ".");
 			return ;
 		}
-		StringBuilder sb = new StringBuilder(this.coherenceMachine.getGameTag() + " Victime" + (deaths.size() == 1 ? "" : "s") + " de cette nuit : ");
+		StringBuilder sb = new StringBuilder(this.coherenceMachine.getGameTag() + " Victime" + (deaths.size() == 1 ? "" : "s") + (state == GameState.NIGHT ? " de " + day : " d'" + day) + " : ");
 		int i = 0;
 		for (WWPlayer player : deaths)
 		{
@@ -217,6 +251,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			giveSleepingInventory(player);
 			n = r.nextInt(houses.size());
 			player.setHouse(houses.get(n));
+			player.getHouse().displayName(player.getOfflinePlayer().getName());
 			houses.remove(n);
 		}
 	}
@@ -248,9 +283,11 @@ public abstract class WWGame extends Game<WWPlayer>
 			if (player.isSpectator() || player.isModerator() || !player.isOnline() || player.getHouse() == null)
 				continue ;
 			Player p = player.getPlayerIfOnline();
+			if (p == null)
+				continue ;
 			player.getHouse().teleportToBed(p);
-			player.getHouse().displayName(p.getName());
 		}
+		broadcastMessage(this.getCoherenceMachine().getGameTag() + ChatColor.WHITE + " La nuit tombe sur SamaVille...");
 		nextNightEvent();
 	}
 	
@@ -264,9 +301,13 @@ public abstract class WWGame extends Game<WWPlayer>
 			Player p = player.getPlayerIfOnline();
 			player.getHouse().removeFromBed(p);
 			p.teleport(plugin.getRandomSpawn());
+			giveVotingInventory(p);
 		}
 		world.setTime(3000L);
 		currentevent = -1;
+		broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.WHITE + " Le jour vient de se lever !");
+		broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.WHITE + " Il est temps de voter pour savoir qui vous allez tuer aujourd'hui.");
+		nextDayEvent();
 	}
 	
 	@Override
