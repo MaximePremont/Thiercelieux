@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import net.samagames.api.games.Game;
 import net.samagames.tools.Titles;
+import net.samagames.tools.chat.ChatUtils;
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.classes.WWClass;
 import net.samagames.werewolves.entities.WWDisguise;
@@ -365,7 +366,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			roles.put(player.getPlayedClass(), i);
 		}
 		Set<WWClass> classes = roles.keySet();
-		int result = 0; // Check innocent & wolves
+		byte result = 0;
 		int total = 0;
 		for (WWClass clazz : classes)
 		{
@@ -377,17 +378,57 @@ public abstract class WWGame extends Game<WWPlayer>
 			else if (clazz.getWinType() == WinType.ALONE)
 				result |= 4;
 		}
+		if (total == 0)
+		{
+			//Total defeat
+		}
 		if (total == 2)
 		{
 			//check if couple
 		}
-		if ((result & 1) == 1 && (result & 2) == 0 && (result & 4) == 0)
+		if (result == 1)
 		{
 			//innocent win
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("Les villageois ont gagnés !");
+			list.add("Le village est sauvé !");
+			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
+			Set<WWPlayer> players = new HashSet<WWPlayer>();
+			for (WWClass clazz : WWClass.VALUES)
+				if (clazz.getWinType() == WinType.INNOCENTS)
+				{
+					Set<WWPlayer> tmp = this.getPlayersByClass(clazz);
+					players.addAll(tmp);
+				}
+			for (WWPlayer p : players)
+			{
+				p.addStars(1, "Victoire !");
+				p.addCoins(10, "Victoire !");
+			}
+			this.handleGameEnd();
+			return true;
 		}
-		if ((result & 1) == 0 && (result & 2) == 1 && (result & 4) == 0)
+		if (result == 2)
 		{
 			//wolves win
+			ArrayList<String> list = new ArrayList<String>();
+			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Les loups ont gagnés !"));
+			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Tout le village a été dévoré !"));
+			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
+			Set<WWPlayer> players = new HashSet<WWPlayer>();
+			for (WWClass clazz : WWClass.VALUES)
+				if (clazz.getWinType() == WinType.WOLVES)
+				{
+					Set<WWPlayer> tmp = this.getPlayersByClass(clazz);
+					players.addAll(tmp);
+				}
+			for (WWPlayer p : players)
+			{
+				p.addStars(1, "Victoire !");
+				p.addCoins(10, "Victoire !");
+			}
+			this.handleGameEnd();
+			return true;
 		}
 		if (total == 1 && (result & 4) == 1)
 		{
