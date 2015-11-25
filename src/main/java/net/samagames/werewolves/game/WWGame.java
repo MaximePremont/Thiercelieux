@@ -457,7 +457,6 @@ public abstract class WWGame extends Game<WWPlayer>
 		}
 		if (total == 1 && result == 4)
 		{
-			//alone win TODO
 			WWPlayer player = null;
 			for (WWClass clazz : WWClass.VALUES)
 				if (clazz.getWinType() == WinType.ALONE)
