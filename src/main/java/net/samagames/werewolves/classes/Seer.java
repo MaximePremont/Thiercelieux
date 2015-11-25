@@ -3,6 +3,7 @@ package net.samagames.werewolves.classes;
 import net.samagames.tools.Titles;
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.game.WWPlayer;
+import net.samagames.werewolves.util.WinType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,6 +23,12 @@ public class Seer extends WWClass
 	public boolean canPlayAtNight()
 	{
 		return true;
+	}
+	
+	@Override
+	public WinType getWinType()
+	{
+		return WinType.INNOCENTS;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package net.samagames.werewolves.classes;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -10,9 +10,8 @@ import net.samagames.tools.Titles;
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.entities.WereWolfDisguise;
 import net.samagames.werewolves.game.WWPlayer;
+import net.samagames.werewolves.util.WinType;
 
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -33,6 +32,12 @@ public class WereWolf extends WWClass
 	public boolean canPlayAtNight()
 	{
 		return true;
+	}
+	
+	@Override
+	public WinType getWinType()
+	{
+		return WinType.WOLVES;
 	}
 
 	@Override
@@ -58,30 +63,13 @@ public class WereWolf extends WWClass
 	public void handleNightTurnEnd(WWPlugin plugin, Set<WWPlayer> players)
 	{
 		this.players.clear();
-		Pair<UUID, Integer> max = new MutablePair<UUID, Integer>(null, null);
-		Collection<UUID> values = choices.values();
-		for (UUID tmp : values)
-		{
-			if (tmp == null)
-				continue ;
-			int n = 0;
-			for (UUID tmp2 : values)
-				if (tmp.equals(tmp2))
-					n++;
-			if (max.getLeft() != null && max.getRight() != null && n == max.getRight() && !max.getLeft().equals(tmp))
-			{
-				max = new MutablePair<UUID, Integer>(null, null);
-				break ;
-			}
-			if (max.getLeft() == null || max.getRight() == null || n > max.getRight())
-				max = new MutablePair<UUID, Integer>(tmp, n);
-		}
+		List<UUID> tops = plugin.getGame().getTopVotes(choices);
 		String msg;
-		if (max.getLeft() == null || max.getRight() == null)
+		if (tops.size() != 1)
 			msg = ChatColor.RED + "Aucun choix de fait, il n'y aura pas de victime des loups-garous ce soir.";
 		else
 		{
-			WWPlayer player = plugin.getGame().getPlayer(max.getLeft());
+			WWPlayer player = plugin.getGame().getPlayer(tops.get(0));
 			if (player == null || !player.isOnline())
 				msg = ChatColor.RED + "Le joueur choisi s'est déconnecté, il n'y aura pas de victime des loups-garous ce soir.";
 			else

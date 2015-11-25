@@ -3,8 +3,8 @@ package net.samagames.werewolves.listener;
 import java.util.Set;
 
 import net.samagames.werewolves.WWPlugin;
-import net.samagames.werewolves.game.GameState;
 import net.samagames.werewolves.game.WWPlayer;
+import net.samagames.werewolves.util.GameState;
 import net.samagames.werewolves.util.ItemsUtil;
 
 import org.bukkit.ChatColor;
@@ -73,6 +73,8 @@ public class PlayerListener implements Listener
 			for (WWPlayer player : plugin.getGame().getInGamePlayers().values())
 			{
 				if (player.isModerator() || player.isSpectator() || !player.isOnline())
+					continue ;
+				if (plugin.getGame().getGameState() == GameState.DAY_2 && !player.isInSecondTurn())
 					continue ;
 				i.addItem(ItemsUtil.createHead(player.getOfflinePlayer().getName()));
 			}

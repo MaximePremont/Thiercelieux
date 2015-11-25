@@ -4,6 +4,7 @@ import java.util.Set;
 
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.classes.WWClass;
+import net.samagames.werewolves.util.GameState;
 
 import org.bukkit.ChatColor;
 

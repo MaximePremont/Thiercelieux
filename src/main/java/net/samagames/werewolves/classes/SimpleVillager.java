@@ -1,5 +1,7 @@
 package net.samagames.werewolves.classes;
 
+import net.samagames.werewolves.util.WinType;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,5 +16,11 @@ public class SimpleVillager extends WWClass
 	public boolean canPlayAtNight()
 	{
 		return false;
+	}
+	
+	@Override
+	public WinType getWinType()
+	{
+		return WinType.INNOCENTS;
 	}
 }

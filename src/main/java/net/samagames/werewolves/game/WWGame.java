@@ -3,8 +3,10 @@ package net.samagames.werewolves.game;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -15,8 +17,10 @@ import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.classes.WWClass;
 import net.samagames.werewolves.entities.WWDisguise;
 import net.samagames.werewolves.task.TurnPassTask;
+import net.samagames.werewolves.util.GameState;
 import net.samagames.werewolves.util.ItemsUtil;
 import net.samagames.werewolves.util.RulesUtil;
+import net.samagames.werewolves.util.WinType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -167,12 +171,25 @@ public abstract class WWGame extends Game<WWPlayer>
 		currentevent++;
 		if (currentevent > 0)
 		{
-			//TODO
-			if (currentevent == 2)//|| ...
+			List<UUID> tops = getTopVotes(votes);
+			if (currentevent == 2 || tops.size() == 1)
 			{
+				if (tops.size() == 1)
+				{
+					WWPlayer player = this.getPlayer(tops.get(0));
+					if (player != null && player.isOnline() && !player.isSpectator() && !player.isModerator())
+						deaths.add(player);
+				}
 				showDeads();
 				startNight();
 				return ;
+			}
+			broadcastMessage(coherenceMachine.getGameTag() + ChatColor.WHITE + " Aucun choix de fait, un deuxième vote sera nécessaire !");
+			for (UUID uuid : tops)
+			{
+				WWPlayer player = getPlayer(uuid);
+				if (player != null && player.isOnline() && !player.isSpectator() && !player.isModerator())
+					player.setSecondTurn(true);
 			}
 		}
 		votes.clear();
@@ -187,6 +204,8 @@ public abstract class WWGame extends Game<WWPlayer>
 	public void handleDayVote(WWPlayer source, WWPlayer target)
 	{
 		if (getGameState() != GameState.DAY_1 && getGameState() != GameState.DAY_2)
+			return ;
+		if (getGameState() == GameState.DAY_2 && !target.isInSecondTurn())
 			return ;
 		if (votes.containsKey(source.getUUID()))
 		{
@@ -273,8 +292,27 @@ public abstract class WWGame extends Game<WWPlayer>
 		return set;
 	}
 	
+	public Set<WWPlayer> getPlayersByWinType(WinType... types)
+	{
+		Set<WWPlayer> set = new HashSet<WWPlayer>();
+		for (WWPlayer player : this.getInGamePlayers().values())
+		{
+			if (player.isSpectator() || player.isModerator() || !player.isOnline())
+				continue ;
+			for (WinType tmp : types)
+				if (player.getPlayedClass() != null && player.getPlayedClass().getWinType().equals(tmp))
+				{
+					set.add(player);
+					break ;
+				}
+		}
+		return set;
+	}
+	
 	public void startNight()
 	{
+		if (checkEnd())
+			return ;
 		this.state = GameState.NIGHT;
 		world.setTime(15000L);
 		currentevent = -1;
@@ -282,6 +320,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		{
 			if (player.isSpectator() || player.isModerator() || !player.isOnline() || player.getHouse() == null)
 				continue ;
+			player.setSecondTurn(false);
 			Player p = player.getPlayerIfOnline();
 			if (p == null)
 				continue ;
@@ -290,9 +329,11 @@ public abstract class WWGame extends Game<WWPlayer>
 		broadcastMessage(this.getCoherenceMachine().getGameTag() + ChatColor.WHITE + " La nuit tombe sur SamaVille...");
 		nextNightEvent();
 	}
-	
+
 	public void startDay()
 	{
+		if (checkEnd())
+			return ;
 		this.state = GameState.DAY_1;
 		for (WWPlayer player : this.getInGamePlayers().values())
 		{
@@ -310,11 +351,57 @@ public abstract class WWGame extends Game<WWPlayer>
 		nextDayEvent();
 	}
 	
+	private boolean checkEnd()
+	{
+		Map<WWClass, Integer> roles = new HashMap<WWClass, Integer>();
+		for (WWPlayer player : this.getInGamePlayers().values())
+		{
+			if (player.isSpectator() || player.isModerator() || !player.isOnline() || player.getPlayedClass() == null)
+				continue ;
+			Integer i = roles.get(player.getPlayedClass());
+			if (i == null)
+				i = 0;
+			i++;
+			roles.put(player.getPlayedClass(), i);
+		}
+		Set<WWClass> classes = roles.keySet();
+		int result = 0; // Check innocent & wolves
+		int total = 0;
+		for (WWClass clazz : classes)
+		{
+			total += roles.get(clazz);
+			if (clazz.getWinType() == WinType.INNOCENTS)
+				result |= 1;
+			else if (clazz.getWinType() == WinType.WOLVES)
+				result |= 2;
+			else if (clazz.getWinType() == WinType.ALONE)
+				result |= 4;
+		}
+		if (total == 2)
+		{
+			//check if couple
+		}
+		if ((result & 1) == 1 && (result & 2) == 0 && (result & 4) == 0)
+		{
+			//innocent win
+		}
+		if ((result & 1) == 0 && (result & 2) == 1 && (result & 4) == 0)
+		{
+			//wolves win
+		}
+		if (total == 1 && (result & 4) == 1)
+		{
+			//alone win
+		}
+		return false;
+	}
+	
 	@Override
 	public void handleLogin(Player player)
 	{
 		super.handleLogin(player);
 		giveWaitingInventory(player);
+		player.teleport(plugin.getRandomSpawn());
 	}
 	
 	@Override
@@ -358,6 +445,34 @@ public abstract class WWGame extends Game<WWPlayer>
 			return ;
 		passtask.cancel();
 		passtask = null;
+	}
+	
+	public List<UUID> getTopVotes(Map<UUID, UUID> list)
+	{
+		Map<UUID, Integer> counts = new HashMap<UUID, Integer>();
+		for (Iterator<Entry<UUID, UUID>> it = list.entrySet().iterator(); it.hasNext();)
+		{
+			Entry<UUID, UUID> entry = it.next();
+			Integer i = counts.get(entry.getValue());
+			if (i == null)
+				i = 0;
+			i++;
+			counts.put(entry.getValue(), i);
+		}
+		List<UUID> tops = new ArrayList<UUID>();
+		int top = 0;
+		for (Iterator<Entry<UUID, Integer>> it = counts.entrySet().iterator(); it.hasNext();)
+		{
+			Entry<UUID, Integer> entry = it.next();
+			if (entry.getValue() > top)
+			{
+				tops.clear();
+				top = entry.getValue();
+			}
+			if (entry.getValue() == top)
+				tops.add(entry.getKey());
+		}
+		return tops;
 	}
 	
 	public abstract void handleChatMessage(WWPlayer player, String message);

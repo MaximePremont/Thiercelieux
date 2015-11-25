@@ -16,11 +16,13 @@ public class WWHouse
 {
 	private Location display;
 	private Location bed;
+	private ArmorStand armorstand;
 	
 	public WWHouse(Location display, Location bed)
 	{
 		this.display = display;
 		this.bed = bed;
+		armorstand = null;
 	}
 	
 	public WWHouse safeReset()
@@ -34,7 +36,9 @@ public class WWHouse
 	
 	public void displayName(String name)
 	{
-		ArmorStand armorstand = (ArmorStand)display.getWorld().spawnEntity(display, EntityType.ARMOR_STAND);
+		if (armorstand != null)
+			return ;
+		armorstand = (ArmorStand)display.getWorld().spawnEntity(display, EntityType.ARMOR_STAND);
 		armorstand.setCustomNameVisible(true);
 		armorstand.setCustomName(ChatColor.GOLD + "Maison de " + name);
 		armorstand.setVisible(false);
@@ -61,5 +65,12 @@ public class WWHouse
 			return ;
 		((CraftPlayer)player).getHandle().a(true, false, false);
 		player.removePotionEffect(PotionEffectType.BLINDNESS);
+	}
+	
+	public void setDeadName(String name)
+	{
+		if (armorstand == null)
+			return ;
+		armorstand.setCustomName(ChatColor.RED + "[X] Maison de " + name + ChatColor.RED + " [X]");
 	}
 }

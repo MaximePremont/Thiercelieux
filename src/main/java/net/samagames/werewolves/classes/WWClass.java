@@ -6,6 +6,7 @@ import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.entities.WWDisguise;
 import net.samagames.werewolves.game.WWPlayer;
 import net.samagames.werewolves.util.ItemsUtil;
+import net.samagames.werewolves.util.WinType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -85,6 +86,7 @@ public abstract class WWClass
 	/* Let's go for personnalisation methods */
 	
 	public abstract boolean canPlayAtNight();
+	public abstract WinType getWinType();
 	public void handleNightTurnStart(WWPlugin plugin, Set<WWPlayer> players){}
 	public void handleNightTurnEnd(WWPlugin plugin, Set<WWPlayer> oldplayers) {}
 	public void handlePlayerClick(WWPlugin plugin, WWPlayer source, WWPlayer target){}

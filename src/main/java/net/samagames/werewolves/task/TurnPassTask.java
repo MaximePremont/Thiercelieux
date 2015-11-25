@@ -49,7 +49,7 @@ public class TurnPassTask implements Runnable
 	
 	private void broadcastActionBarMessage(String msg)
 	{
-		for (WWPlayer player : plugin.getGame().getInGamePlayers().values())
+		for (WWPlayer player : plugin.getGame().getRegisteredGamePlayers().values())
 		{
 			Player p = player.getPlayerIfOnline();
 			if (p != null)
