@@ -71,6 +71,6 @@ public class WWHouse
 	{
 		if (armorstand == null)
 			return ;
-		armorstand.setCustomName(ChatColor.RED + "[X] Maison de " + name + ChatColor.RED + " [X]");
+		armorstand.setCustomName(ChatColor.RED + "✞ Maison de " + name + ChatColor.RED + " ✞");
 	}
 }

@@ -13,6 +13,7 @@ public class WWPlayer extends GamePlayer
 	private WWClass clazz;
 	private WWHouse house;
 	private boolean secondturn;
+	private WWPlayer couple;
 	
 	public WWPlayer(Player player)
 	{
@@ -20,6 +21,7 @@ public class WWPlayer extends GamePlayer
 		clazz = null;
 		house = null;
 		secondturn = false;
+		couple = null;
 	}
 	
 	public WWClass getPlayedClass()
@@ -50,6 +52,21 @@ public class WWPlayer extends GamePlayer
 	public void setSecondTurn(boolean s)
 	{
 		secondturn = s;
+	}
+	
+	public void setCouple(WWPlayer other)
+	{
+		couple = other;
+	}
+	
+	public WWPlayer getCouple()
+	{
+		return couple;
+	}
+	
+	public boolean isInCouple()
+	{
+		return (couple != null);
 	}
 	
 	@Override

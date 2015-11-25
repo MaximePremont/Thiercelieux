@@ -380,15 +380,41 @@ public abstract class WWGame extends Game<WWPlayer>
 		}
 		if (total == 0)
 		{
-			//Total defeat
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("Tout le monde a perdu, il n'y a plus personne en vie dans le village...");
+			list.add("Les bâtiments resteront abandonnées et tomberont en ruine bientôt.");
+			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
 		}
 		if (total == 2)
 		{
-			//check if couple
+			WWPlayer[] players = new WWPlayer[2];
+			int i = 0;
+			for (WWClass clazz : classes)
+			{
+				Set<WWPlayer> tmp = this.getPlayersByClass(clazz);
+				for (WWPlayer wwp : tmp)
+				{
+					players[i] = wwp;
+					i++;
+				}
+			}
+			if (players[0].isInCouple() && players[1].isInCouple() && players[0].getCouple().equals(players[1]))
+			{
+				ArrayList<String> list = new ArrayList<String>();
+				list.add("Le couple a gagné !");
+				list.add("Ils vivront heureux et auront beaucoup d'enfants <3");
+				coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
+				for (WWPlayer p : players)
+				{
+					p.addStars(1, "Victoire !");
+					p.addCoins(10, "Victoire !");
+				}
+				finishGame();
+				return true;
+			}
 		}
 		if (result == 1)
 		{
-			//innocent win
 			ArrayList<String> list = new ArrayList<String>();
 			list.add("Les villageois ont gagnés !");
 			list.add("Le village est sauvé !");
@@ -405,12 +431,11 @@ public abstract class WWGame extends Game<WWPlayer>
 				p.addStars(1, "Victoire !");
 				p.addCoins(10, "Victoire !");
 			}
-			this.handleGameEnd();
+			finishGame();
 			return true;
 		}
 		if (result == 2)
 		{
-			//wolves win
 			ArrayList<String> list = new ArrayList<String>();
 			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Les loups ont gagnés !"));
 			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Tout le village a été dévoré !"));
@@ -427,14 +452,20 @@ public abstract class WWGame extends Game<WWPlayer>
 				p.addStars(1, "Victoire !");
 				p.addCoins(10, "Victoire !");
 			}
-			this.handleGameEnd();
+			finishGame();
 			return true;
 		}
-		if (total == 1 && (result & 4) == 1)
+		if (total == 1 && result == 4)
 		{
 			//alone win
 		}
 		return false;
+	}
+	
+	public void finishGame()
+	{
+		state = GameState.END;
+		plugin.getServer().getScheduler().runTaskLater(plugin, () -> handleGameEnd(), 30);
 	}
 	
 	@Override
