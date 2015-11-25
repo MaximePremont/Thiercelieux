@@ -401,7 +401,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			if (players[0].isInCouple() && players[1].isInCouple() && players[0].getCouple().equals(players[1]))
 			{
 				ArrayList<String> list = new ArrayList<String>();
-				list.add("Le couple a gagné !");
+				list.add("Le couple (" + players[0].getOfflinePlayer().getName() + " & " + players[1].getOfflinePlayer().getName() + ") a gagné !");
 				list.add("Ils vivront heureux et auront beaucoup d'enfants <3");
 				coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
 				for (WWPlayer p : players)
@@ -457,7 +457,28 @@ public abstract class WWGame extends Game<WWPlayer>
 		}
 		if (total == 1 && result == 4)
 		{
-			//alone win
+			//alone win TODO
+			WWPlayer player = null;
+			for (WWClass clazz : WWClass.VALUES)
+				if (clazz.getWinType() == WinType.ALONE)
+				{
+					Set<WWPlayer> tmp = this.getPlayersByClass(clazz);
+					for (WWPlayer wwp : tmp)
+					{
+						player = wwp;
+						break ;
+					}
+				}
+			if (player == null)
+				return false;
+			ArrayList<String> list = new ArrayList<String>();
+			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + player.getPlayedClass().getPrefix() + player.getPlayedClass().getName() + "(" + player.getOfflinePlayer().getName() + ") a gagné !"));
+			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Il / Elle est le dernier survivant en vie."));
+			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
+			player.addCoins(10, "Victoire !");
+			player.addStars(1, "Victoire !");
+			finishGame();
+			return true;
 		}
 		return false;
 	}
