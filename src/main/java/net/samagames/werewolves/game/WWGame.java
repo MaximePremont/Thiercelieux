@@ -437,7 +437,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		if (result == 2)
 		{
 			ArrayList<String> list = new ArrayList<String>();
-			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Les loups ont gagnés !"));
+			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Les loups ont gagné !"));
 			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Tout le village a été dévoré !"));
 			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
 			Set<WWPlayer> players = new HashSet<WWPlayer>();
