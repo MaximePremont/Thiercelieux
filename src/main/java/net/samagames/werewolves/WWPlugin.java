@@ -13,6 +13,7 @@ import net.samagames.werewolves.game.VocalGame;
 import net.samagames.werewolves.game.WWGame;
 import net.samagames.werewolves.game.WWHouse;
 import net.samagames.werewolves.listener.PlayerListener;
+import net.samagames.werewolves.task.InfiniteSleepTask;
 import net.samagames.werewolves.util.JsonUtils;
 
 import org.bukkit.ChatColor;
@@ -45,6 +46,7 @@ public class WWPlugin extends JavaPlugin
 		listener = new PlayerListener(this);
 		
 		getServer().getPluginManager().registerEvents(listener, this);
+		getServer().getScheduler().runTaskTimer(this, new InfiniteSleepTask(this), 50, 50);
 		
 		for (WWClass clazz : WWClass.VALUES)
 		{

@@ -124,16 +124,19 @@ public abstract class WWGame extends Game<WWPlayer>
 		if (currentevent >= 0)
 		{
 			Set<WWPlayer> oldplayers = this.getPlayersByClass(classes[currentevent]);
-			WWDisguise olddisguise = classes[currentevent].getDisguise();
-			for (WWPlayer player : oldplayers)
+			if (!oldplayers.isEmpty())
 			{
-				Player p = player.getPlayerIfOnline();
-				player.getHouse().teleportToBed(p);
-				if (olddisguise != null)
-					olddisguise.undisguisePlayer(p);
-				giveSleepingInventory(player);
+				WWDisguise olddisguise = classes[currentevent].getDisguise();
+				for (WWPlayer player : oldplayers)
+				{
+					Player p = player.getPlayerIfOnline();
+					player.getHouse().teleportToBed(p);
+					if (olddisguise != null)
+						olddisguise.undisguisePlayer(p);
+					giveSleepingInventory(player);
+				}
+				classes[currentevent].handleNightTurnEnd(plugin, oldplayers);
 			}
-			classes[currentevent].handleNightTurnEnd(plugin, oldplayers);
 		}
 		currentevent++;
 		if (currentevent >= classes.length)
@@ -358,6 +361,8 @@ public abstract class WWGame extends Game<WWPlayer>
 	
 	private boolean checkEnd()
 	{
+		if (gamePlayers.size() == 1)
+			return false;
 		Map<WWClass, Integer> roles = new HashMap<WWClass, Integer>();
 		for (WWPlayer player : this.getInGamePlayers().values())
 		{
