@@ -268,8 +268,11 @@ public abstract class WWGame extends Game<WWPlayer>
 				i++;
 			}
 			player.setPlayedClass(newclass);
-			Titles.sendTitle(player.getPlayerIfOnline(), 5, 70, 5, "", ChatColor.GOLD + "Vous êtes : " + newclass.getName());
-			player.getPlayerIfOnline().sendMessage(coherenceMachine.getGameTag() + ChatColor.GOLD + " Vous êtes : " + newclass.getName());
+			Player p = player.getPlayerIfOnline();
+			Titles.sendTitle(p, 5, 70, 5, "", ChatColor.GOLD + "Vous êtes : " + newclass.getName());
+			p.sendMessage(coherenceMachine.getGameTag() + ChatColor.GOLD + " Vous êtes : " + newclass.getName());
+			p.setExp(0);
+			p.setLevel(0);
 			n = list.get(newclass);
 			if (n > 1)
 				list.put(newclass, n - 1);
@@ -503,6 +506,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		super.handleLogin(player);
 		giveWaitingInventory(player);
 		player.teleport(plugin.getRandomSpawn());
+		player.setExp(0);
 	}
 	
 	@Override
