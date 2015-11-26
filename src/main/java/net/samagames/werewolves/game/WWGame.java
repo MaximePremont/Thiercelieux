@@ -185,7 +185,10 @@ public abstract class WWGame extends Game<WWPlayer>
 				startNight();
 				return ;
 			}
-			broadcastMessage(coherenceMachine.getGameTag() + ChatColor.WHITE + " Aucun choix de fait, un deuxième vote sera nécessaire !");
+			if (tops.size() == 0)
+				broadcastMessage(coherenceMachine.getGameTag() + ChatColor.WHITE + " Aucun choix de fait, un deuxième vote sera nécessaire !");
+			else
+				broadcastMessage(coherenceMachine.getGameTag() + ChatColor.WHITE + " Egalité dans les voix, un deuxième vote sera nécessaire !");
 			for (UUID uuid : tops)
 			{
 				WWPlayer player = getPlayer(uuid);
@@ -263,6 +266,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			}
 			player.setPlayedClass(newclass);
 			Titles.sendTitle(player.getPlayerIfOnline(), 5, 70, 5, "", ChatColor.GOLD + "Vous êtes : " + newclass.getName());
+			player.getPlayerIfOnline().sendMessage(coherenceMachine.getGameTag() + ChatColor.GOLD + " Vous êtes : " + newclass.getName());
 			n = list.get(newclass);
 			if (n > 1)
 				list.put(newclass, n - 1);
