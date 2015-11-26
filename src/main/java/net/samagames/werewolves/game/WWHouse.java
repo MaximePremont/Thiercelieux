@@ -1,6 +1,7 @@
 package net.samagames.werewolves.game;
 
 import net.minecraft.server.v1_8_R3.BlockPosition;
+import net.minecraft.server.v1_8_R3.EntityHuman.EnumBedResult;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,7 +54,9 @@ public class WWHouse
 		player.teleport(bed);
 		player.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(Integer.MAX_VALUE, 10));
 		try {
-			((CraftPlayer)player).getHandle().a(new BlockPosition(bed.getBlockX(), bed.getBlockY(), bed.getBlockZ()));
+			EnumBedResult result = ((CraftPlayer)player).getHandle().a(new BlockPosition(bed.getBlockX(), bed.getBlockY(), bed.getBlockZ()));
+			if (result != EnumBedResult.OK)
+				Bukkit.getLogger().severe("[WereWolves] Error : can't set player " + player.getName() + " in bed (" + bed.getBlockX() + ", " + bed.getBlockY() + ", " + bed.getBlockZ() + ", result=" + result + ").");
 		} catch (IllegalArgumentException ex) {
 			Bukkit.getLogger().severe("[WereWolves] Invalid bed location ! (" + bed.getBlockX() + ", " + bed.getBlockY() + ", " + bed.getBlockZ() + ").");
 		}
