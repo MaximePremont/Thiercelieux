@@ -33,7 +33,6 @@ public class WWPlugin extends JavaPlugin
 	private SamaGamesAPI api;
 	private Map<WWClass, Integer> roles;
 	private List<WWHouse> houses;
-	private PlayerListener listener;
 	private Location spawn;
 	
 	@Override
@@ -44,9 +43,8 @@ public class WWPlugin extends JavaPlugin
 		api = SamaGamesAPI.get();
 		roles = new HashMap<WWClass, Integer>();
 		houses = new ArrayList<WWHouse>();
-		listener = new PlayerListener(this);
 		
-		getServer().getPluginManager().registerEvents(listener, this);
+		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(), this);
 		getServer().getScheduler().runTaskTimer(this, new InfiniteSleepTask(this), 50, 50);
 		
@@ -83,9 +81,9 @@ public class WWPlugin extends JavaPlugin
 		spawn = JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("spawn", null));
 		if (n != api.getGameManager().getGameProperties().getMaxSlots() ||
 				api.getGameManager().getGameProperties().getMaxSlots() != api.getGameManager().getGameProperties().getMinSlots() ||
-				n != houses.size())
+				n != houses.size() || spawn == null)
 		{
-			getServer().getLogger().severe("[WWPlugin] Problem in server slots (min != max != roles != houses)");
+			getServer().getLogger().severe("[WWPlugin] Problem in server slots (min != max != roles != houses) or missing spawn");
 			getServer().shutdown();
 			return ;
 		}
