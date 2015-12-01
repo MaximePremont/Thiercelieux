@@ -67,14 +67,14 @@ public class PacketUtils
 		if (!(player instanceof CraftPlayer))
 			return ;
 		PacketPlayOutNamedEntitySpawn packet = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
-		try {
-			Reflection.setValue(packet, "b", uuid);
-		} catch (NoSuchFieldException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
 		for (Player p : Bukkit.getOnlinePlayers())
 			if (p instanceof CraftPlayer && !p.equals(player))
 				((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
+	}
+	
+	public static void broadcastSpawnPlayerPacket(Player player, String url)
+	{
+		
 	}
 	
 	public static void sendActionBarMessage(Player player, String msg)

@@ -8,6 +8,8 @@ import java.util.Random;
 
 import net.samagames.api.SamaGamesAPI;
 import net.samagames.werewolves.classes.WWClass;
+import net.samagames.werewolves.classes.Witch;
+import net.samagames.werewolves.game.GameCommand;
 import net.samagames.werewolves.game.TextGame;
 import net.samagames.werewolves.game.VocalGame;
 import net.samagames.werewolves.game.WWGame;
@@ -47,6 +49,7 @@ public class WWPlugin extends JavaPlugin
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(), this);
 		getServer().getScheduler().runTaskTimer(this, new InfiniteSleepTask(this), 50, 50);
+		getServer().getPluginCommand("game").setExecutor(new GameCommand(this));
 		
 		for (WWClass clazz : WWClass.VALUES)
 		{
@@ -58,6 +61,9 @@ public class WWPlugin extends JavaPlugin
 			{
 				roles.put(clazz, n);
 				getServer().getLogger().info("[WWPlugin] Class loaded " + clazz.getID() + " x" + n);
+				if (clazz == WWClass.WITCH)
+					((Witch)clazz).setHouseLocation(JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("witch-house", null)),
+							JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("witch-stand", null)));
 			}
 		}
 		if (api.getGameManager().getGameProperties().getOption("vocal", new JsonPrimitive(false)).getAsBoolean())

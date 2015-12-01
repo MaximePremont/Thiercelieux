@@ -1,6 +1,5 @@
 package net.samagames.werewolves.listener;
 
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFadeEvent;
@@ -26,8 +25,14 @@ public class WorldListener implements Listener
 	@EventHandler
 	public void onEntitySpawn(EntitySpawnEvent ev)
 	{
-		if (ev.getEntityType() != EntityType.PLAYER)
+		switch (ev.getEntityType())
+		{
+		case ARMOR_STAND:
+		case PLAYER:
+			return ;
+		default:
 			ev.setCancelled(true);
+		}
 	}
 	
 	@Override

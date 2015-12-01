@@ -35,13 +35,11 @@ public class PlayerListener implements Listener
 	@EventHandler
 	public void onInteract(PlayerInteractEvent ev)
 	{
-		if (ev.getItem() == null)
-			return ;
-		if (ev.getItem().getType() == Material.NETHER_STAR && plugin.getGame().getGameState() == GameState.WAITING)
+		if (ev.getItem() != null && ev.getItem().getType() == Material.NETHER_STAR && plugin.getGame().getGameState() == GameState.WAITING)
 			;//TODO: Class Selector
-		if (ev.getItem().getType() == ItemsUtil.SELECTOR.getType() && plugin.getGame().getGameState() == GameState.NIGHT)
+		ev.setCancelled(true);
+		if (ev.getItem() != null && ev.getItem().getType() == ItemsUtil.SELECTOR.getType() && plugin.getGame().getGameState() == GameState.NIGHT)
 		{
-			ev.setCancelled(true);
 			WWPlayer wwp = plugin.getGame().getPlayer(ev.getPlayer().getUniqueId());
 			if (wwp == null || wwp.isModerator() || wwp.isSpectator())
 				return ;
@@ -63,9 +61,8 @@ public class PlayerListener implements Listener
 			ev.getPlayer().openInventory(i);
 			return ;
 		}
-		if (ev.getItem().getType() == ItemsUtil.SELECTOR.getType() && (plugin.getGame().getGameState() == GameState.DAY_1 || plugin.getGame().getGameState() == GameState.DAY_2))
+		if (ev.getItem() != null && ev.getItem().getType() == ItemsUtil.SELECTOR.getType() && (plugin.getGame().getGameState() == GameState.DAY_1 || plugin.getGame().getGameState() == GameState.DAY_2))
 		{
-			ev.setCancelled(true);
 			WWPlayer wwp = plugin.getGame().getPlayer(ev.getPlayer().getUniqueId());
 			if (wwp == null || wwp.isModerator() || wwp.isSpectator())
 				return ;
