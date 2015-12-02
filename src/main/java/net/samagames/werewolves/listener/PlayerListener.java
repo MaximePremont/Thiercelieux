@@ -130,10 +130,12 @@ public class PlayerListener implements Listener
 	{
 		ev.setCancelled(true);
 		Player p;
-		if (!(ev.getWhoClicked() instanceof Player) || (p = (Player)ev.getWhoClicked()) == null || ev.getCurrentItem() == null || ev.getCurrentItem().getType() == Material.AIR)
+		if (!(ev.getWhoClicked() instanceof Player) || (p = (Player)ev.getWhoClicked()) == null || ev.getCurrentItem() == null || ev.getCurrentItem().getType() == Material.AIR || ev.getClickedInventory() == null)
 			return ;
 		WWPlayer wwp = plugin.getGame().getPlayer(p.getUniqueId());
-		if (wwp == null || wwp.isModerator() || wwp.isSpectator())
+		if (wwp == null || wwp.isModerator() || wwp.isSpectator() || !wwp.isOnline())
+			return ;
+		if (wwp.getPlayedClass() != null && plugin.getGame().isCurrentlyPlayed(wwp.getPlayedClass()) && wwp.getPlayedClass().overrideInventoryClick(plugin, wwp, ev.getClickedInventory(), ev.getCurrentItem()))
 			return ;
 		if (ev.getCurrentItem().getType() == Material.SKULL_ITEM && ev.getCurrentItem().getDurability() == 3)
 		{
@@ -146,7 +148,7 @@ public class PlayerListener implements Listener
 				return ;
 			if (plugin.getGame().getGameState() == GameState.NIGHT)
 			{
-				if (wwp.getPlayedClass() != null)
+				if (wwp.getPlayedClass() != null && plugin.getGame().isCurrentlyPlayed(wwp.getPlayedClass()))
 					wwp.getPlayedClass().handlePlayerClick(plugin, wwp, wwp2);
 			}
 			else if (plugin.getGame().getGameState() == GameState.DAY_1 || plugin.getGame().getGameState() == GameState.DAY_2)

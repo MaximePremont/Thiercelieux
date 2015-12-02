@@ -1,6 +1,7 @@
 package net.samagames.werewolves.classes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -100,6 +101,7 @@ public class Witch extends WWClass
 		{
 			Player p = wwp.getPlayerIfOnline();
 			p.setGameMode(GameMode.ADVENTURE);
+			p.closeInventory();
 		}
 	}
 	
@@ -112,13 +114,63 @@ public class Witch extends WWClass
 		if (pot == null)
 			return ;
 		Inventory inv = plugin.getServer().createInventory(null, InventoryType.BREWING, ChatColor.DARK_PURPLE + "Alambic de Sorcière");
-		ItemStack potion1 = ItemsUtil.setItemMeta(Material.POTION, 1, (short)8193, ChatColor.LIGHT_PURPLE + "Potion de vie", null);
+		List<WWPlayer> deads = plugin.getGame().getDeadPlayers();
+		ItemStack potion1 = ItemsUtil.setItemMeta(Material.POTION, 1, (short)8193, ChatColor.LIGHT_PURPLE + "Potion de vie", deads.size() == 0 ? new String[]{ChatColor.RED + "Aucun mort à sauver"} : null);
 		ItemStack potion2 = ItemsUtil.setItemMeta(Material.POTION, 1, (short)8268, ChatColor.DARK_PURPLE + "Potion de mort", null);
-		inv.setItem(0, potion1);
-		inv.setItem(2, potion2);
+		ItemStack emptypotion1 = ItemsUtil.setItemMeta(Material.GLASS_BOTTLE, 1, (short)0, ChatColor.LIGHT_PURPLE + "Potion de vie", new String[]{ChatColor.RED + "Potion déjà utilisée"});
+		ItemStack emptypotion2 = ItemsUtil.setItemMeta(Material.GLASS_BOTTLE, 1, (short)0, ChatColor.LIGHT_PURPLE + "Potion de mort", new String[]{ChatColor.RED + "Potion déjà utilisée"});
+		ItemStack quit = ItemsUtil.setItemMeta(Material.BARRIER, 1, (short)0, "Passer votre tour", null);
+		inv.setItem(0, pot[0] ? potion1 : emptypotion1);
+		inv.setItem(2, pot[1] ? potion2 : emptypotion2);
+		inv.setItem(1, quit);
 		player.getPlayerIfOnline().openInventory(inv);
 	}
 
+	@Override
+	public boolean overrideInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack item)
+	{
+		if (item == null)
+			return false;
+		if (i.getName().equals(ChatColor.DARK_PURPLE + "Alambic de Sorcière"))
+		{
+			if (item.getType() == Material.BARRIER)
+			{
+				source.getPlayerIfOnline().closeInventory();
+				plugin.getGame().nextNightEvent();
+				return true;
+			}
+			if (item.getType() != Material.POTION)
+				return false;
+			List<WWPlayer> deads = plugin.getGame().getDeadPlayers();
+			if (item.getDurability() == 8193 && !deads.isEmpty())
+			{
+				Inventory inv = plugin.getServer().createInventory(null, 27, ChatColor.LIGHT_PURPLE + "Potion de vie");
+				for (WWPlayer player : deads)
+					inv.addItem(ItemsUtil.createHead(player.getOfflinePlayer().getName()));
+				source.getPlayerIfOnline().openInventory(inv);
+				return true;
+			}
+			else if (item.getDurability() == 8268)
+			{
+				Inventory inv = plugin.getServer().createInventory(null, 27, ChatColor.DARK_PURPLE + "Potion de mort");
+				for (WWPlayer wwp : plugin.getGame().getInGamePlayers().values())
+				{
+					if (!wwp.isOnline() || wwp.isSpectator() || wwp.isModerator() || deads.contains(wwp))
+						continue ;
+					inv.addItem(ItemsUtil.createHead(wwp.getOfflinePlayer().getName()));
+				}
+				source.getPlayerIfOnline().openInventory(inv);
+				return true;
+			}
+			return true;
+		}
+		if (i.getName().equals(ChatColor.LIGHT_PURPLE + "Potion de vie"))
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public void setHouseLocation(Location h, Location s)
 	{
 		house = h;

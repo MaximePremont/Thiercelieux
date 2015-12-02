@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import net.samagames.api.games.Game;
+import net.samagames.api.games.Status;
+import net.samagames.api.games.themachine.messages.Message;
 import net.samagames.tools.Titles;
 import net.samagames.tools.chat.ChatUtils;
 import net.samagames.werewolves.WWPlugin;
@@ -364,7 +366,7 @@ public abstract class WWGame extends Game<WWPlayer>
 	
 	private boolean checkEnd()
 	{
-		if (gamePlayers.size() == 1)
+		if (gamePlayers.size() == 1) //Just for debug
 			return false;
 		Map<WWClass, Integer> roles = new HashMap<WWClass, Integer>();
 		for (WWPlayer player : this.getInGamePlayers().values())
@@ -396,6 +398,8 @@ public abstract class WWGame extends Game<WWPlayer>
 			list.add("Tout le monde a perdu, il n'y a plus personne en vie dans le village...");
 			list.add("Les bâtiments resteront abandonnées et tomberont en ruine bientôt.");
 			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
+			finishGame();
+			return true;
 		}
 		if (total == 2)
 		{
@@ -512,7 +516,17 @@ public abstract class WWGame extends Game<WWPlayer>
 	@Override
 	public void handleLogout(Player player)
 	{
+		WWPlayer wwp = this.getPlayer(player.getUniqueId());
+		if (getStatus() != Status.IN_GAME || wwp == null || wwp.isSpectator() || wwp.isModerator() || wwp.getPlayedClass() == null)
+		{
+			super.handleLogout(player);
+			return ;
+		}
+		if(this.gamePlayers.containsKey(player.getUniqueId()))
+			this.gamePlayers.remove(player.getUniqueId()); //Remove disconnect message
 		super.handleLogout(player);
+		new Message(ChatColor.WHITE + player.getName() + " s'est déconnecté du jeu. Son rôle était : " + wwp.getPlayedClass().getName(), this.coherenceMachine.getGameTag()).displayToAll();
+		checkEnd();
 	}
 	
 	public GameState getGameState()

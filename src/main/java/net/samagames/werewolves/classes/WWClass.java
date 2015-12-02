@@ -10,6 +10,7 @@ import net.samagames.werewolves.util.WinType;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -92,6 +93,11 @@ public abstract class WWClass
 	public void handleNightTurnEnd(WWPlugin plugin, Set<WWPlayer> oldplayers) {}
 	public void handlePlayerClick(WWPlugin plugin, WWPlayer source, WWPlayer target){}
 	public void handlePlayerBlockClick(WWPlugin plugin, WWPlayer player, Block block){}
+	
+	public boolean overrideInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack current)
+	{
+		return false;
+	}
 	
 	public String getTextAtNight()
 	{
