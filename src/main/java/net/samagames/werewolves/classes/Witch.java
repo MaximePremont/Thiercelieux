@@ -34,7 +34,7 @@ public class Witch extends WWClass
 	
 	protected Witch()
 	{
-		super("witch", "La", ChatColor.DARK_PURPLE + "Sorcière", new ItemStack(Material.POTION), new String[]{}, new SkinDisguise("Witch_Aphmau"));
+		super("witch", "La", "&5Sorcière", new ItemStack(Material.POTION), new String[]{"Vous avez deux potions, une pour rendre la vie", "et une pour la prendre.", "Utilisez les à bon escient !"}, new SkinDisguise("Witch_Aphmau"));
 		house = null;
 		stand = null;
 		armorStands = null;
