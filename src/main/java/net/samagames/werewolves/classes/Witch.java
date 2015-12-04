@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 public class Witch extends WWClass
 {
@@ -110,6 +111,11 @@ public class Witch extends WWClass
 	{
 		if (block.getLocation().distanceSquared(stand) > 1 || block.getType() != Material.BREWING_STAND)
 			return ;
+		openStand(plugin, player);
+	}
+
+	private void openStand(WWPlugin plugin, WWPlayer player)
+	{
 		Boolean[] pot = potions.get(player.getUUID());
 		if (pot == null)
 			return ;
@@ -125,7 +131,7 @@ public class Witch extends WWClass
 		inv.setItem(1, quit);
 		player.getPlayerIfOnline().openInventory(inv);
 	}
-
+	
 	@Override
 	public boolean overrideInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack item)
 	{
@@ -166,6 +172,48 @@ public class Witch extends WWClass
 		}
 		if (i.getName().equals(ChatColor.LIGHT_PURPLE + "Potion de vie"))
 		{
+			if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
+				return true;
+			String owner = ((SkullMeta)item.getItemMeta()).getOwner();
+			if (owner == null)
+				return true;
+			Player p = plugin.getServer().getPlayerExact(owner);
+			if (p == null)
+				return true;
+			WWPlayer wwp = plugin.getGame().getPlayer(p.getUniqueId());
+			if (wwp == null)
+				return true;
+			if (!plugin.getGame().getDeadPlayers().contains(wwp))
+				return true;
+			Boolean[] pot = potions.get(wwp.getUUID());
+			if (pot == null || !pot[0])
+				return true;
+			pot[0] = false;
+			plugin.getGame().getDeadPlayers().remove(wwp);
+			openStand(plugin, wwp);
+			return true;
+		}
+		if (i.getName().equals(ChatColor.DARK_PURPLE + "Potion de mort"))
+		{
+			if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
+				return true;
+			String owner = ((SkullMeta)item.getItemMeta()).getOwner();
+			if (owner == null)
+				return true;
+			Player p = plugin.getServer().getPlayerExact(owner);
+			if (p == null)
+				return true;
+			WWPlayer wwp = plugin.getGame().getPlayer(p.getUniqueId());
+			if (wwp == null)
+				return true;
+			if (plugin.getGame().getDeadPlayers().contains(wwp))
+				return true;
+			Boolean[] pot = potions.get(wwp.getUUID());
+			if (pot == null || !pot[1])
+				return true;
+			pot[1] = false;
+			plugin.getGame().getDeadPlayers().add(wwp);
+			openStand(plugin, wwp);
 			return true;
 		}
 		return false;
