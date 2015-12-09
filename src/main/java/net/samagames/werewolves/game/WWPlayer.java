@@ -2,6 +2,7 @@ package net.samagames.werewolves.game;
 
 import net.samagames.api.games.GamePlayer;
 import net.samagames.werewolves.classes.WWClass;
+import net.samagames.werewolves.util.PacketUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -84,5 +85,6 @@ public class WWPlayer extends GamePlayer
             player.hidePlayer(p);
 		if (house != null)
 			house.setDeadName(p.getName());
+		PacketUtils.sendWorldBorder(p);
 	}
 }

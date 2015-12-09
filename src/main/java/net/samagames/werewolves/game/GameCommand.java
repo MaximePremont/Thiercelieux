@@ -29,6 +29,8 @@ public class GameCommand implements CommandExecutor
 				plugin.getGame().nextNightEvent();
 			default:
 			}
+		if (arg3.length == 1 && arg3[0].equalsIgnoreCase("check") && arg0.hasPermission("thiercelieux.check"))
+			plugin.getGame().checkEnd();
 		return true;
 	}
 

@@ -364,7 +364,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		nextDayEvent();
 	}
 	
-	private boolean checkEnd()
+	public boolean checkEnd()
 	{
 		if (gamePlayers.size() == 1) //Just for debug
 			return false;

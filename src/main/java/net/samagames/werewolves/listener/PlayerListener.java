@@ -20,6 +20,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -155,4 +156,10 @@ public class PlayerListener implements Listener
 				plugin.getGame().handleDayVote(wwp, wwp2);
 		}
 	}
+	
+	public void onPotionDrink(PlayerItemConsumeEvent ev)
+	{
+        if (ev.getItem() != null && ev.getItem().getType().equals(Material.POTION))
+           ev.setCancelled(true);
+    }
 }

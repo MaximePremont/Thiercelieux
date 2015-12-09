@@ -19,7 +19,7 @@ public class Cupidon extends WWClass
 	
 	protected Cupidon()
 	{
-		super("cupidon", "", "&dCupidon", new ItemStack(Material.RED_ROSE), new String[]{"Choisissez deux amoureux", "qui s'aimeront jusqu'à la mort"}, null);
+		super("cupidon", "", "&dCupidon", new ItemStack(Material.RED_ROSE), new String[]{"Choisissez deux joueurs", "qui s'aimeront jusqu'à la mort"}, null);
 		played = false;
 		couple = new WWPlayer[2];
 		Arrays.fill(couple, null);

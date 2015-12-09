@@ -9,6 +9,9 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
 import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldBorder;
+import net.minecraft.server.v1_8_R3.PacketPlayOutWorldBorder.EnumWorldBorderAction;
+import net.minecraft.server.v1_8_R3.WorldBorder;
 import net.samagames.tools.Reflection;
 
 import org.bukkit.Bukkit;
@@ -84,5 +87,17 @@ public class PacketUtils
 		String json = "{text:\"" + msg + "\"}";
 		PacketPlayOutChat packet = new PacketPlayOutChat(ChatSerializer.a(json), (byte)2);
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+	}
+	
+	public static void sendWorldBorder(Player player)
+	{
+		if (!(player instanceof CraftPlayer))
+			return ;
+		WorldBorder wb = new WorldBorder();
+		wb.setCenter(1000000D, 1000000D);
+		wb.setSize(1D);
+		((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, EnumWorldBorderAction.INITIALIZE));
+		((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, EnumWorldBorderAction.SET_CENTER));
+		((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, EnumWorldBorderAction.SET_SIZE));
 	}
 }
