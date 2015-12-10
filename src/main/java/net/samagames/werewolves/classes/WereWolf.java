@@ -74,7 +74,8 @@ public class WereWolf extends WWClass
 				msg = ChatColor.RED + "Le joueur choisi s'est déconnecté, il n'y aura pas de victime des loups-garous ce soir.";
 			else
 			{
-				plugin.getGame().getDeadPlayers().add(player);
+				if (!player.isProtected())
+					plugin.getGame().getDeadPlayers().add(player);
 				msg = plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + " La victime de ce soir des loups-garous est : " + player.getOfflinePlayer().getName() + " !";
 			}
 		}

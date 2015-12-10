@@ -342,6 +342,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		currentevent = -1;
 		for (WWPlayer player : this.getInGamePlayers().values())
 		{
+			player.setProtected(false);
 			if (player.isSpectator() || player.isModerator() || !player.isOnline() || player.getHouse() == null)
 				continue ;
 			player.setSecondTurn(false);

@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -162,4 +163,13 @@ public class PlayerListener implements Listener
         if (ev.getItem() != null && ev.getItem().getType().equals(Material.POTION))
            ev.setCancelled(true);
     }
+	
+	public void onBedLeave(PlayerBedLeaveEvent ev)
+	{
+		WWPlayer wwp = plugin.getGame().getPlayer(ev.getPlayer().getUniqueId());
+		if (wwp == null)
+			return ;
+		if (wwp.getHouse() != null)
+			wwp.getHouse().teleportToBed(ev.getPlayer());
+	}
 }

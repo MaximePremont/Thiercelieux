@@ -15,6 +15,7 @@ public class WWPlayer extends GamePlayer
 	private WWHouse house;
 	private boolean secondturn;
 	private WWPlayer couple;
+	private boolean isProtected;
 	
 	public WWPlayer(Player player)
 	{
@@ -23,6 +24,7 @@ public class WWPlayer extends GamePlayer
 		house = null;
 		secondturn = false;
 		couple = null;
+		isProtected = false;
 	}
 	
 	public WWClass getPlayedClass()
@@ -87,5 +89,16 @@ public class WWPlayer extends GamePlayer
 			house.setDeadName(p.getName());
 		if (!moderator)
 			PacketUtils.sendWorldBorder(p);
+	}
+	
+	
+	public boolean isProtected()
+	{
+		return isProtected;
+	}
+	
+	public void setProtected(boolean p)
+	{
+		isProtected = p;
 	}
 }

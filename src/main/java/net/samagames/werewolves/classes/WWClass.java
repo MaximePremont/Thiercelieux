@@ -22,9 +22,10 @@ public abstract class WWClass
 	public static final WWClass LITTLE_GIRL = new LittleGirl(); //Petite Fille
 	public static final WWClass WITCH = new Witch(); //Sorcière
 	public static final WWClass CUPIDON = new Cupidon(); //Cupidon
+	public static final WWClass SALVATOR = new Salvator(); //Salvateur
 	
-	public static final WWClass[] VALUES = new WWClass[]{SEER, WEREWOLF, SIMPLE_VILLAGER, LITTLE_GIRL, WITCH, CUPIDON};
-	public static final WWClass[] NIGHT_ORDER = new WWClass[]{CUPIDON, SEER, WEREWOLF, WITCH};
+	public static final WWClass[] VALUES = new WWClass[]{SEER, WEREWOLF, SIMPLE_VILLAGER, LITTLE_GIRL, WITCH, CUPIDON, SALVATOR};
+	public static final WWClass[] NIGHT_ORDER = new WWClass[]{CUPIDON, SALVATOR, SEER, WEREWOLF, WITCH};
 	
 	private String prefix;
 	private String id;
@@ -119,5 +120,4 @@ public abstract class WWClass
 	{
 		return 60;
 	}
-
 }
