@@ -85,6 +85,7 @@ public class WWPlayer extends GamePlayer
             player.hidePlayer(p);
 		if (house != null)
 			house.setDeadName(p.getName());
-		PacketUtils.sendWorldBorder(p);
+		if (!moderator)
+			PacketUtils.sendWorldBorder(p);
 	}
 }
