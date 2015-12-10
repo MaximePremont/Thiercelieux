@@ -231,11 +231,14 @@ public abstract class WWGame extends Game<WWPlayer>
 			broadcastMessage(this.coherenceMachine.getGameTag() + " Personne n'est mort " + day + ".");
 			return ;
 		}
+		List<WWPlayer> lovers = new ArrayList<WWPlayer>();
 		StringBuilder sb = new StringBuilder(this.coherenceMachine.getGameTag() + " Victime" + (deaths.size() == 1 ? "" : "s") + (state == GameState.NIGHT ? " de " + day : " d'" + day) + " : ");
 		int i = 0;
 		for (WWPlayer player : deaths)
 		{
 			player.setSpectator();
+			if (player.isInCouple() && !deaths.contains(player.getCouple()))
+				lovers.add(player.getCouple());
 			Player p = player.getPlayerIfOnline();
 			if (p != null)
 				p.getWorld().strikeLightningEffect(p.getLocation());
@@ -245,6 +248,14 @@ public abstract class WWGame extends Game<WWPlayer>
 			i++;
 		}
 		broadcastMessage(sb.toString());
+		for (WWPlayer player : lovers)
+		{
+			player.setSpectator();
+			Player p = player.getPlayerIfOnline();
+			if (p != null)
+				p.getWorld().strikeLightningEffect(p.getLocation());
+			broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.YELLOW + " " + player.getOfflinePlayer().getName() + ChatColor.WHITE + " était amoureux de " + ChatColor.YELLOW + player.getCouple().getOfflinePlayer().getName() + ChatColor.WHITE + " et se suicide donc par amour.");
+		}
 		deaths.clear();
 	}
 
