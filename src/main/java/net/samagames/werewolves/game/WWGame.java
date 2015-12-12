@@ -39,7 +39,7 @@ public abstract class WWGame extends Game<WWPlayer>
 	protected GameState state;
 	protected World world;
 	protected int currentevent;
-	protected List<WWPlayer> deaths;
+	protected Map<WWPlayer, WWClass> deaths;
 	protected BukkitTask passtask;
 	protected Map<UUID, UUID> votes;
 	
@@ -49,7 +49,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		this.plugin = plugin;
 		this.state = GameState.WAITING;
 		world = plugin.getServer().getWorlds().get(0);
-		deaths = new ArrayList<WWPlayer>();
+		deaths = new HashMap<WWPlayer, WWClass>();
 		passtask = null;
 		votes = new HashMap<UUID, UUID>();
 	}
@@ -126,7 +126,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		if (currentevent >= 0)
 		{
 			Set<WWPlayer> oldplayers = this.getPlayersByClass(classes[currentevent]);
-			if (!oldplayers.isEmpty())
+			if (!oldplayers.isEmpty() && !classes[currentevent].isDisabled() && classes[currentevent].canPlayAtNight())
 			{
 				WWDisguise olddisguise = classes[currentevent].getDisguise();
 				for (WWPlayer player : oldplayers)
@@ -148,7 +148,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			return ;
 		}
 		Set<WWPlayer> players = this.getPlayersByClass(classes[currentevent]);
-		if (players.isEmpty())
+		if (players.isEmpty() || classes[currentevent].isDisabled() || !classes[currentevent].canPlayAtNight())
 		{
 			nextNightEvent();
 			return ;
@@ -184,7 +184,7 @@ public abstract class WWGame extends Game<WWPlayer>
 				{
 					WWPlayer player = this.getPlayer(tops.get(0));
 					if (player != null && player.isOnline() && !player.isSpectator() && !player.isModerator())
-						deaths.add(player);
+						diePlayer(player, null);
 				}
 				showDeads();
 				startNight();
@@ -234,10 +234,10 @@ public abstract class WWGame extends Game<WWPlayer>
 		List<WWPlayer> lovers = new ArrayList<WWPlayer>();
 		StringBuilder sb = new StringBuilder(this.coherenceMachine.getGameTag() + " Victime" + (deaths.size() == 1 ? "" : "s") + (state == GameState.NIGHT ? " de " + day : " d'" + day) + " : ");
 		int i = 0;
-		for (WWPlayer player : deaths)
+		for (WWPlayer player : deaths.keySet())
 		{
 			player.setSpectator();
-			if (player.isInCouple() && !deaths.contains(player.getCouple()))
+			if (player.isInCouple() && !deaths.containsKey(player.getCouple()))
 				lovers.add(player.getCouple());
 			Player p = player.getPlayerIfOnline();
 			if (p != null)
@@ -307,7 +307,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			if (player.isSpectator() || player.isModerator() || !player.isOnline())
 				continue ;
 			for (WWClass tmp : clazz)
-				if (player.getPlayedClass() != null && player.getPlayedClass().equals(tmp))
+				if (player.getPlayedClass() != null && tmp.getClass().isAssignableFrom(player.getPlayedClass().getClass()))
 				{
 					set.add(player);
 					break ;
@@ -565,9 +565,9 @@ public abstract class WWGame extends Game<WWPlayer>
 		return WWClass.NIGHT_ORDER[currentevent].equals(clazz);
 	}
 	
-	public List<WWPlayer> getDeadPlayers()
+	public Set<WWPlayer> getDeadPlayers()
 	{
-		return deaths;
+		return deaths.keySet();
 	}
 	
 	public void cancelPassTask()
@@ -604,6 +604,14 @@ public abstract class WWGame extends Game<WWPlayer>
 				tops.add(entry.getKey());
 		}
 		return tops;
+	}
+	
+	public void diePlayer(WWPlayer player, WWClass killer)
+	{
+		if (killer == null)
+			deaths.put(player, null);
+		else if (killer != null && player.getPlayedClass() != null && player.getPlayedClass().canBeKilled(player, killer))
+			deaths.put(player, killer);
 	}
 	
 	public abstract void handleChatMessage(WWPlayer player, String message);

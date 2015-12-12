@@ -4,6 +4,7 @@ import java.util.Set;
 
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.classes.WWClass;
+import net.samagames.werewolves.classes.WereWolf;
 import net.samagames.werewolves.util.GameState;
 
 import org.bukkit.ChatColor;
@@ -36,7 +37,7 @@ public class TextGame extends WWGame
 			broadcastMessage(ChatColor.GRAY + player.getPlayerIfOnline().getDisplayName() + ChatColor.WHITE + ": " + message);
 			return ;
 		}
-		if (WWClass.NIGHT_ORDER[currentevent] == WWClass.WEREWOLF && player.getPlayedClass() == WWClass.WEREWOLF)
+		if (WWClass.NIGHT_ORDER[currentevent] == WWClass.WEREWOLF && player.getPlayedClass() instanceof WereWolf)
 		{
 			Set<WWPlayer> receivers = this.getPlayersByClass(WWClass.WEREWOLF);
 			String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + player.getPlayerIfOnline().getDisplayName() + ChatColor.WHITE + ": " + message;

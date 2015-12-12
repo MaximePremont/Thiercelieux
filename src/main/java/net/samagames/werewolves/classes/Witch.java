@@ -1,7 +1,6 @@
 package net.samagames.werewolves.classes;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -120,7 +119,7 @@ public class Witch extends WWClass
 		if (pot == null)
 			return ;
 		Inventory inv = plugin.getServer().createInventory(null, InventoryType.BREWING, ChatColor.DARK_PURPLE + "Alambic de Sorcière");
-		List<WWPlayer> deads = plugin.getGame().getDeadPlayers();
+		Set<WWPlayer> deads = plugin.getGame().getDeadPlayers();
 		ItemStack potion1 = ItemsUtil.setItemMeta(Material.POTION, 1, (short)8193, ChatColor.LIGHT_PURPLE + "Potion de vie", deads.size() == 0 ? new String[]{ChatColor.RED + "Aucun mort à sauver"} : null);
 		ItemStack potion2 = ItemsUtil.setItemMeta(Material.POTION, 1, (short)8268, ChatColor.DARK_PURPLE + "Potion de mort", null);
 		ItemStack emptypotion1 = ItemsUtil.setItemMeta(Material.GLASS_BOTTLE, 1, (short)0, ChatColor.LIGHT_PURPLE + "Potion de vie", new String[]{ChatColor.RED + "Potion déjà utilisée"});
@@ -147,7 +146,7 @@ public class Witch extends WWClass
 			}
 			if (item.getType() != Material.POTION)
 				return false;
-			List<WWPlayer> deads = plugin.getGame().getDeadPlayers();
+			Set<WWPlayer> deads = plugin.getGame().getDeadPlayers();
 			if (item.getDurability() == 8193 && !deads.isEmpty())
 			{
 				Inventory inv = plugin.getServer().createInventory(null, 27, ChatColor.LIGHT_PURPLE + "Potion de vie");
@@ -212,7 +211,7 @@ public class Witch extends WWClass
 			if (pot == null || !pot[1])
 				return true;
 			pot[1] = false;
-			plugin.getGame().getDeadPlayers().add(wwp);
+			plugin.getGame().diePlayer(wwp, this);
 			openStand(plugin, wwp);
 			return true;
 		}

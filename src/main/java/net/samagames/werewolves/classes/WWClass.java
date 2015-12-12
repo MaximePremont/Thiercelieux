@@ -16,15 +16,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public abstract class WWClass
 {
-	public static final WWClass SIMPLE_VILLAGER = new SimpleVillager(); //Villageois
-	public static final WWClass SEER = new Seer(); //Voyante
-	public static final WWClass WEREWOLF = new WereWolf(); //Loup Garou
-	public static final WWClass LITTLE_GIRL = new LittleGirl(); //Petite Fille
-	public static final WWClass WITCH = new Witch(); //Sorcière
-	public static final WWClass CUPIDON = new Cupidon(); //Cupidon
-	public static final WWClass SALVATOR = new Salvator(); //Salvateur
+	public static final WWClass SIMPLE_VILLAGER = new SimpleVillager();	//Villageois
+	public static final WWClass SEER = new Seer();						//Voyante
+	public static final WWClass WEREWOLF = new WereWolf();				//Loup Garou
+	public static final WWClass LITTLE_GIRL = new LittleGirl();			//Petite Fille
+	public static final WWClass WITCH = new Witch();					//Sorcière
+	public static final WWClass CUPIDON = new Cupidon();				//Cupidon
+	public static final WWClass SALVATOR = new Salvator();				//Salvateur
+	public static final WWClass ELDER = new Elder();					//Ancien
 	
-	public static final WWClass[] VALUES = new WWClass[]{SEER, WEREWOLF, SIMPLE_VILLAGER, LITTLE_GIRL, WITCH, CUPIDON, SALVATOR};
+	public static final WWClass[] VALUES = new WWClass[]{SEER, WEREWOLF, SIMPLE_VILLAGER, LITTLE_GIRL, WITCH, CUPIDON, SALVATOR, ELDER};
 	public static final WWClass[] NIGHT_ORDER = new WWClass[]{CUPIDON, SALVATOR, SEER, WEREWOLF, WITCH};
 	
 	private String prefix;
@@ -33,6 +34,7 @@ public abstract class WWClass
 	private ItemStack item;
 	private String[] description;
 	private WWDisguise disguise;
+	private boolean disabled;
 	
 	protected WWClass(String id, String prefix, String name, ItemStack item, String[] description, WWDisguise disguise)
 	{
@@ -42,6 +44,7 @@ public abstract class WWClass
 		this.item = ItemsUtil.setItemMeta(item, name, description);
 		this.disguise = disguise;
 		this.id = id;
+		this.disabled = false;
 	}
 	
 	public String getPrefix()
@@ -87,6 +90,16 @@ public abstract class WWClass
 		return item;
 	}
 	
+	public void setDisabled(boolean d)
+	{
+		disabled = d;
+	}
+	
+	public boolean isDisabled()
+	{
+		return disabled;
+	}
+	
 	/* Let's go for personnalisation methods */
 	
 	public abstract boolean canPlayAtNight();
@@ -101,14 +114,19 @@ public abstract class WWClass
 		return false;
 	}
 	
+	public boolean canBeKilled(WWPlayer player, WWClass by)
+	{
+		return true;
+	}
+	
 	public String getTextAtNight()
 	{
 		return null;
 	}
 	
-	public void handleDeath(WWPlugin plugin, WWPlayer player)
+	public boolean handleDeath(WWPlugin plugin, WWPlayer player, WWClass by)
 	{
-		
+		return true;
 	}
 	
 	public boolean hasSelector()
