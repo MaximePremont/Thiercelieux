@@ -248,6 +248,9 @@ public abstract class WWGame extends Game<WWPlayer>
 			i++;
 		}
 		broadcastMessage(sb.toString());
+		for (WWPlayer player : deaths.keySet())
+			if (player.getPlayedClass() != null)
+				player.getPlayedClass().handleDeath(plugin, player, deaths.get(player));
 		for (WWPlayer player : lovers)
 		{
 			player.setSpectator();
