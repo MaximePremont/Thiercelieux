@@ -23,13 +23,13 @@ public class VocalGame extends WWGame
 	{
 		if (player.isModerator())
 		{
-			broadcastMessage(player.getPlayerIfOnline().getDisplayName() + ChatColor.WHITE + ":" + message);
+			broadcastMessage(player.getDisplayName() + ChatColor.WHITE + ":" + message);
 			return ;
 		}
 		if (WWClass.NIGHT_ORDER[currentevent] == WWClass.WEREWOLF && player.getPlayedClass() instanceof WereWolf)
 		{
 			Set<WWPlayer> receivers = this.getPlayersByClass(WWClass.WEREWOLF);
-			String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + player.getPlayerIfOnline().getDisplayName() + ChatColor.WHITE + ": " + message;
+			String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + player.getDisplayName() + ChatColor.WHITE + ": " + message;
 			for (WWPlayer wwp : receivers)
 				wwp.getPlayerIfOnline().sendMessage(msg);
 			msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + "Loup" + ChatColor.WHITE + ": " + message;

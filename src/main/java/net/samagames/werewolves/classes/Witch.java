@@ -151,7 +151,7 @@ public class Witch extends WWClass
 			{
 				Inventory inv = plugin.getServer().createInventory(null, 27, ChatColor.LIGHT_PURPLE + "Potion de vie");
 				for (WWPlayer player : deads)
-					inv.addItem(ItemsUtil.createHead(player.getOfflinePlayer().getName()));
+					inv.addItem(ItemsUtil.createHead(player.getDisplayName()));
 				source.getPlayerIfOnline().openInventory(inv);
 				return true;
 			}
@@ -162,7 +162,7 @@ public class Witch extends WWClass
 				{
 					if (!wwp.isOnline() || wwp.isSpectator() || wwp.isModerator() || deads.contains(wwp))
 						continue ;
-					inv.addItem(ItemsUtil.createHead(wwp.getOfflinePlayer().getName()));
+					inv.addItem(ItemsUtil.createHead(wwp.getDisplayName()));
 				}
 				source.getPlayerIfOnline().openInventory(inv);
 				return true;

@@ -21,12 +21,12 @@ public class TextGame extends WWGame
 	{
 		if (player.isModerator())
 		{
-			broadcastMessage(ChatColor.GRAY + player.getPlayerIfOnline().getDisplayName() + ChatColor.WHITE + ": " + message);
+			broadcastMessage(ChatColor.GRAY + player.getDisplayName() + ChatColor.WHITE + ": " + message);
 			return ;
 		}
 		if (player.isSpectator())
 		{
-			String msg = ChatColor.GRAY + "[SPEC] " + player.getPlayerIfOnline().getDisplayName() + ChatColor.WHITE + ": " + message;
+			String msg = ChatColor.GRAY + "[SPEC] " + player.getDisplayName() + ChatColor.WHITE + ": " + message;
 			for (WWPlayer wwp : this.getSpectatorPlayers().values())
 				if (wwp.isOnline())
 					wwp.getPlayerIfOnline().sendMessage(msg);
@@ -34,13 +34,13 @@ public class TextGame extends WWGame
 		}
 		if (getGameState() != GameState.NIGHT)
 		{
-			broadcastMessage(ChatColor.GRAY + player.getPlayerIfOnline().getDisplayName() + ChatColor.WHITE + ": " + message);
+			broadcastMessage(ChatColor.GRAY + player.getDisplayName() + ChatColor.WHITE + ": " + message);
 			return ;
 		}
 		if (WWClass.NIGHT_ORDER[currentevent] == WWClass.WEREWOLF && player.getPlayedClass() instanceof WereWolf)
 		{
 			Set<WWPlayer> receivers = this.getPlayersByClass(WWClass.WEREWOLF);
-			String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + player.getPlayerIfOnline().getDisplayName() + ChatColor.WHITE + ": " + message;
+			String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + player.getDisplayName() + ChatColor.WHITE + ": " + message;
 			for (WWPlayer wwp : receivers)
 				wwp.getPlayerIfOnline().sendMessage(msg);
 			receivers = this.getPlayersByClass(WWClass.LITTLE_GIRL);

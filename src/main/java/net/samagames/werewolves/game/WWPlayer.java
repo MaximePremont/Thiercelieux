@@ -6,6 +6,7 @@ import net.samagames.werewolves.util.PacketUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
@@ -100,5 +101,22 @@ public class WWPlayer extends GamePlayer
 	public void setProtected(boolean p)
 	{
 		isProtected = p;
+	}
+	
+	public void win()
+	{
+		addCoins(10, "Victoire !");
+		addStars(1, "Victoire !");
+	}
+	
+	public String getDisplayName()
+	{
+		OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
+		String name;
+		if (off.isOnline())
+			name = off.getPlayer().getDisplayName();
+		else
+			name = off.getName();
+		return name;
 	}
 }

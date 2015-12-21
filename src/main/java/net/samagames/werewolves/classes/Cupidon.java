@@ -46,7 +46,7 @@ public class Cupidon extends WWClass
 	@Override
 	public void handlePlayerClick(WWPlugin plugin, WWPlayer source, WWPlayer target)
 	{
-		source.getPlayerIfOnline().sendMessage(ChatColor.RED + "Vous avez choisi : " + ChatColor.BOLD + target.getOfflinePlayer().getName());
+		source.getPlayerIfOnline().sendMessage(ChatColor.RED + "Vous avez choisi : " + target.getDisplayName());
 		if (couple[0] == null)
 			couple[0] = target;
 		else if (couple[1] == null)
@@ -67,11 +67,11 @@ public class Cupidon extends WWClass
 			msg = ChatColor.RED + "Aucun choix de fait, il n'y aura pas d'amoureux dans cette partie.";
 		else
 		{
-			msg = plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + "Les deux amoureux sont " + ChatColor.BOLD + p[0].getName() + ChatColor.RED + " et " + ChatColor.BOLD + p[1].getName();
+			msg = plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + "Les deux amoureux sont " + ChatColor.BOLD + p[0].getDisplayName() + ChatColor.RED + " et " + ChatColor.BOLD + p[1].getDisplayName();
 			couple[0].setCouple(couple[1]);
 			couple[1].setCouple(couple[0]);
-			p[0].sendMessage(plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + "Vous êtes amoureux de " + p[1].getName() + ", si l'un d'entre vous meurt, l'autre aussi !");
-			p[1].sendMessage(plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + "Vous êtes amoureux de " + p[0].getName() + ", si l'un d'entre vous meurt, l'autre aussi !");
+			p[0].sendMessage(plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + "Vous êtes amoureux de " + p[1].getDisplayName() + ", si l'un d'entre vous meurt, l'autre aussi !");
+			p[1].sendMessage(plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + "Vous êtes amoureux de " + p[0].getDisplayName() + ", si l'un d'entre vous meurt, l'autre aussi !");
 		}
 		for (WWPlayer wwp : players)
 			if (wwp.isOnline())

@@ -76,7 +76,7 @@ public class WereWolf extends WWClass
 			{
 				if (!player.isProtected())
 					plugin.getGame().diePlayer(player, this);
-				msg = plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + " La victime de ce soir des loups-garous est : " + player.getOfflinePlayer().getName() + " !";
+				msg = plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + " La victime de ce soir des loups-garous est : " + player.getDisplayName() + " !";
 			}
 		}
 		for (WWPlayer wwp : players)
@@ -98,7 +98,7 @@ public class WereWolf extends WWClass
 			choices.put(source.getUUID(), target.getUUID());
 			for (WWPlayer wwp : players)
 			{
-				String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + source.getOfflinePlayer().getName() + " a voté pour " + target.getOfflinePlayer().getName();
+				String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + source.getDisplayName() + " a voté pour " + target.getDisplayName();
 				Player player = wwp.getPlayerIfOnline();
 				if (player != null)
 					player.sendMessage(msg);

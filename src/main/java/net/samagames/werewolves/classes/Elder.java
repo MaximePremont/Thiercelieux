@@ -62,7 +62,7 @@ public class Elder extends WWClass
 				if (wwp.getPlayedClass() != null && wwp.getPlayedClass().getWinType() == WinType.INNOCENTS)
 					wwp.getPlayedClass().setDisabled(true);
 			}
-			plugin.getGame().broadcastMessage(plugin.getGame().getCoherenceMachine().getGameTag() + " L'ancien " + player.getOfflinePlayer().getName() + " a été tué par des villageois, ceux-ci perdent donc tous leurs pouvoirs !");
+			plugin.getGame().broadcastMessage(plugin.getGame().getCoherenceMachine().getGameTag() + " L'ancien " + player.getDisplayName() + " a été tué par des villageois, ceux-ci perdent donc tous leurs pouvoirs !");
 		}
 		return true;
 	}

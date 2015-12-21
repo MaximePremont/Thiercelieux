@@ -43,7 +43,7 @@ public class Seer extends WWClass
 		if (locked || target.isSpectator() || target.isModerator() || !target.isOnline())
 			return ;
 		locked = true;
-		Titles.sendTitle(source.getPlayerIfOnline(), 5, 50, 5, ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Rôle de " + target.getOfflinePlayer().getName(), target.getPlayedClass().getName());
+		Titles.sendTitle(source.getPlayerIfOnline(), 5, 50, 5, ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Rôle de " + target.getDisplayName(), target.getPlayedClass().getName());
 		plugin.getGame().cancelPassTask();
 		plugin.getServer().getScheduler().runTaskLater(plugin, () -> plugin.getGame().nextNightEvent(), 60);
 	}

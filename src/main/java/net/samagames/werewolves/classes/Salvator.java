@@ -35,7 +35,7 @@ public class Salvator extends WWClass {
 			return ;
 		Player p1 = source.getPlayerIfOnline();
 		if (p1 != null)
-			p1.sendMessage(plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.WHITE + " Vous avez protégé : " + ChatColor.YELLOW + target.getOfflinePlayer().getName());
+			p1.sendMessage(plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.WHITE + " Vous avez protégé : " + ChatColor.YELLOW + target.getDisplayName());
 		target.setProtected(true);
 		plugin.getGame().nextNightEvent();
 	}

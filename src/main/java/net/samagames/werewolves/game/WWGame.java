@@ -123,7 +123,7 @@ public abstract class WWGame extends Game<WWPlayer>
 	{
 		this.cancelPassTask();
 		WWClass[] classes = WWClass.NIGHT_ORDER;
-		if (currentevent >= 0)
+		if (currentevent >= 0 && currentevent < classes.length)
 		{
 			Set<WWPlayer> oldplayers = this.getPlayersByClass(classes[currentevent]);
 			if (!oldplayers.isEmpty() && !classes[currentevent].isDisabled() && classes[currentevent].canPlayAtNight())
@@ -143,8 +143,8 @@ public abstract class WWGame extends Game<WWPlayer>
 		currentevent++;
 		if (currentevent >= classes.length)
 		{
-			showDeads();
-			startDay();
+			if (showDeads())
+				startDay();
 			return ;
 		}
 		Set<WWPlayer> players = this.getPlayersByClass(classes[currentevent]);
@@ -186,8 +186,8 @@ public abstract class WWGame extends Game<WWPlayer>
 					if (player != null && player.isOnline() && !player.isSpectator() && !player.isModerator())
 						diePlayer(player, null);
 				}
-				showDeads();
-				startNight();
+				if (showDeads())
+					startNight();
 				return ;
 			}
 			if (tops.size() == 0)
@@ -219,17 +219,17 @@ public abstract class WWGame extends Game<WWPlayer>
 		if (votes.containsKey(source.getUUID()))
 		{
 			votes.put(source.getUUID(), target.getUUID());
-			broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.WHITE + " " + ChatColor.BOLD + source.getOfflinePlayer().getName() + ChatColor.WHITE + " a voté pour " + ChatColor.BOLD + target.getOfflinePlayer().getName());
+			broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.WHITE + " " + ChatColor.BOLD + source.getDisplayName() + ChatColor.WHITE + " a voté pour " + ChatColor.BOLD + target.getDisplayName());
 		}
 	}
 	
-	private void showDeads()
+	private boolean showDeads()
 	{
 		String day = this.getGameState() == GameState.NIGHT ? "cette nuit" : "aujourd'hui";
 		if (deaths.isEmpty())
 		{
 			broadcastMessage(this.coherenceMachine.getGameTag() + " Personne n'est mort " + day + ".");
-			return ;
+			return true;
 		}
 		List<WWPlayer> lovers = new ArrayList<WWPlayer>();
 		StringBuilder sb = new StringBuilder(this.coherenceMachine.getGameTag() + " Victime" + (deaths.size() == 1 ? "" : "s") + (state == GameState.NIGHT ? " de " + day : " d'" + day) + " : ");
@@ -244,22 +244,25 @@ public abstract class WWGame extends Game<WWPlayer>
 				p.getWorld().strikeLightningEffect(p.getLocation());
 			if (i > 0)
 				sb.append(ChatColor.WHITE + ", ");
-			sb.append(ChatColor.YELLOW + player.getOfflinePlayer().getName());
+			sb.append(ChatColor.YELLOW + player.getDisplayName());
 			i++;
 		}
 		broadcastMessage(sb.toString());
+		boolean ok = true;
 		for (WWPlayer player : deaths.keySet())
 			if (player.getPlayedClass() != null)
-				player.getPlayedClass().handleDeath(plugin, player, deaths.get(player));
+				if (!player.getPlayedClass().handleDeath(plugin, player, deaths.get(player)))
+					ok = false;
 		for (WWPlayer player : lovers)
 		{
 			player.setSpectator();
 			Player p = player.getPlayerIfOnline();
 			if (p != null)
 				p.getWorld().strikeLightningEffect(p.getLocation());
-			broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.YELLOW + " " + player.getOfflinePlayer().getName() + ChatColor.WHITE + " était amoureux de " + ChatColor.YELLOW + player.getCouple().getOfflinePlayer().getName() + ChatColor.WHITE + " et se suicide donc par amour.");
+			broadcastMessage(this.coherenceMachine.getGameTag() + ChatColor.YELLOW + " " + player.getDisplayName() + ChatColor.WHITE + " était amoureux de " + ChatColor.YELLOW + player.getCouple().getDisplayName() + ChatColor.WHITE + " et se suicide donc par amour.");
 		}
 		deaths.clear();
+		return ok;
 	}
 
 	public void selectRoles()
@@ -432,14 +435,11 @@ public abstract class WWGame extends Game<WWPlayer>
 			if (players[0].isInCouple() && players[1].isInCouple() && players[0].getCouple().equals(players[1]))
 			{
 				ArrayList<String> list = new ArrayList<String>();
-				list.add("Le couple (" + players[0].getOfflinePlayer().getName() + " & " + players[1].getOfflinePlayer().getName() + ") a gagné !");
-				list.add("Ils vivront heureux et auront beaucoup d'enfants <3");
+				list.add(ChatUtils.getCenteredText("Le couple (" + players[0].getDisplayName() + ChatColor.WHITE + " & " + players[1].getDisplayName() + ChatColor.WHITE + ") a gagné !"));
+				list.add(ChatUtils.getCenteredText("Ils vivront heureux et auront beaucoup d'enfants <3"));
 				coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
 				for (WWPlayer p : players)
-				{
-					p.addStars(1, "Victoire !");
-					p.addCoins(10, "Victoire !");
-				}
+					p.win();
 				finishGame();
 				return true;
 			}
@@ -447,8 +447,8 @@ public abstract class WWGame extends Game<WWPlayer>
 		if (result == 1)
 		{
 			ArrayList<String> list = new ArrayList<String>();
-			list.add("Les villageois ont gagnés !");
-			list.add("Le village est sauvé !");
+			list.add(ChatUtils.getCenteredText("Les villageois ont gagnés !"));
+			list.add(ChatUtils.getCenteredText("Le village est sauvé !"));
 			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
 			Set<WWPlayer> players = new HashSet<WWPlayer>();
 			for (WWClass clazz : WWClass.VALUES)
@@ -458,10 +458,7 @@ public abstract class WWGame extends Game<WWPlayer>
 					players.addAll(tmp);
 				}
 			for (WWPlayer p : players)
-			{
-				p.addStars(1, "Victoire !");
-				p.addCoins(10, "Victoire !");
-			}
+				p.win();
 			finishGame();
 			return true;
 		}
@@ -479,10 +476,7 @@ public abstract class WWGame extends Game<WWPlayer>
 					players.addAll(tmp);
 				}
 			for (WWPlayer p : players)
-			{
-				p.addStars(1, "Victoire !");
-				p.addCoins(10, "Victoire !");
-			}
+				p.win();
 			finishGame();
 			return true;
 		}
@@ -502,11 +496,10 @@ public abstract class WWGame extends Game<WWPlayer>
 			if (player == null)
 				return false;
 			ArrayList<String> list = new ArrayList<String>();
-			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + player.getPlayedClass().getPrefix() + player.getPlayedClass().getName() + "(" + player.getOfflinePlayer().getName() + ") a gagné !"));
+			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + player.getPlayedClass().getPrefix() + player.getPlayedClass().getName() + ChatColor.WHITE + "(" + player.getDisplayName() + ChatColor.WHITE + ") a gagné !"));
 			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Il / Elle est le dernier survivant en vie."));
 			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
-			player.addCoins(10, "Victoire !");
-			player.addStars(1, "Victoire !");
+			player.win();
 			finishGame();
 			return true;
 		}
@@ -540,7 +533,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		if(this.gamePlayers.containsKey(player.getUniqueId()))
 			this.gamePlayers.remove(player.getUniqueId()); //Remove disconnect message
 		super.handleLogout(player);
-		new Message(ChatColor.WHITE + player.getName() + " s'est déconnecté du jeu. Son rôle était : " + wwp.getPlayedClass().getName(), this.coherenceMachine.getGameTag()).displayToAll();
+		new Message(ChatColor.WHITE + player.getDisplayName() + " s'est déconnecté du jeu. Son rôle était : " + wwp.getPlayedClass().getName(), this.coherenceMachine.getGameTag()).displayToAll();
 		checkEnd();
 	}
 	
