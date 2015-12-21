@@ -1,5 +1,8 @@
 package net.samagames.werewolves.classes;
 
+import java.util.ArrayList;
+
+import net.samagames.tools.chat.ChatUtils;
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.game.WWPlayer;
 import net.samagames.werewolves.util.WinType;
@@ -39,9 +42,12 @@ public class Angel extends WWClass
 		if (turns == 1)
 		{
 			plugin.getServer().getScheduler().runTask(plugin, () -> {
-				plugin.getGame().broadcastMessage("");
+				ArrayList<String> list = new ArrayList<String>();
+				list.add(ChatUtils.getCenteredText("L'ange (" + who.getDisplayName() + ") est mort au premier tour."));
+				list.add(ChatUtils.getCenteredText("Il gagne donc la partie !"));
+				plugin.getGame().getCoherenceMachine().getTemplateManager().getBasicMessageTemplate().execute(list);
 				who.win();
-				plugin.getGame().handleGameEnd(); 
+				plugin.getGame().finishGame();
 			});
 			return false;
 		}
