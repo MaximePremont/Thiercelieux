@@ -18,7 +18,8 @@ public class Angel extends WWClass
 	{
 		super("angel", "L'", "&bAnge", new ItemStack(Material.SNOW_BLOCK), new String[]{
 			"Votre objectif est de mourir",
-			"lors de la première nuit ou de", "la première journée. Sinon, vous",
+			"lors de la première nuit ou",
+			"la première journée. Sinon, vous",
 			"devenez un simple villageois."}, null);
 		turns = 0;
 	}

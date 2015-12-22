@@ -36,6 +36,7 @@ public class SamaBOTConnector
 		    		sb.append(" " + p);
 		    out.println(sb.toString());
 		    echoSocket.close();
+		    out.close();
 		    
 		    ServerSocket serverSocket = new ServerSocket(6790);
 			Socket connectionSocket = serverSocket.accept();
