@@ -609,7 +609,7 @@ public abstract class WWGame extends Game<WWPlayer>
 	{
 		if (killer == null)
 			deaths.put(player, null);
-		else if (killer != null && player.getPlayedClass() != null && player.getPlayedClass().canBeKilled(player, killer))
+		else if (player.getPlayedClass() != null && player.getPlayedClass().canBeKilled(player, killer))
 			deaths.put(player, killer);
 	}
 	
