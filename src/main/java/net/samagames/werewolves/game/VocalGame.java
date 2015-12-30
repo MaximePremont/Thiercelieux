@@ -26,7 +26,7 @@ public class VocalGame extends WWGame
 			broadcastMessage(player.getDisplayName() + ChatColor.WHITE + ":" + message);
 			return ;
 		}
-		if (WWClass.NIGHT_ORDER[currentevent] == WWClass.WEREWOLF && player.getPlayedClass() instanceof WereWolf)
+		if (WWClass.getNightOrder()[currentevent] == WWClass.WEREWOLF && player.getPlayedClass() instanceof WereWolf)
 		{
 			Set<WWPlayer> receivers = this.getPlayersByClass(WWClass.WEREWOLF);
 			String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + player.getDisplayName() + ChatColor.WHITE + ": " + message;

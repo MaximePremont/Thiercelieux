@@ -28,7 +28,6 @@ import com.google.gson.JsonPrimitive;
 
 public class WWPlugin extends JavaPlugin
 {
-	private static WWPlugin instance;
 	public static final String NAME_BICOLOR = ChatColor.GRAY + "" + ChatColor.BOLD + "Loups Garous";
 	
 	private WWGame game;
@@ -40,8 +39,6 @@ public class WWPlugin extends JavaPlugin
 	@Override
 	public void onEnable()
 	{
-		instance = this;
-		
 		api = SamaGamesAPI.get();
 		roles = new HashMap<WWClass, Integer>();
 		houses = new ArrayList<WWHouse>();
@@ -51,7 +48,7 @@ public class WWPlugin extends JavaPlugin
 		getServer().getScheduler().runTaskTimer(this, new InfiniteSleepTask(this), 50, 50);
 		getServer().getPluginCommand("game").setExecutor(new GameCommand(this));
 		
-		for (WWClass clazz : WWClass.VALUES)
+		for (WWClass clazz : WWClass.getValues())
 		{
 			JsonElement element = api.getGameManager().getGameProperties().getOption(clazz.getID(), null);
 			if (element == null)
@@ -93,11 +90,6 @@ public class WWPlugin extends JavaPlugin
 			getServer().shutdown();
 			return ;
 		}
-	}
-	
-	public static WWPlugin getInstance()
-	{
-		return instance;
 	}
 	
 	public WWGame getGame()

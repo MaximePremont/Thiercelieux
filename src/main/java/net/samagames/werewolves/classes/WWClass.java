@@ -1,5 +1,6 @@
 package net.samagames.werewolves.classes;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import net.samagames.werewolves.WWPlugin;
@@ -26,8 +27,8 @@ public abstract class WWClass
 	public static final WWClass ELDER = new Elder();					//Ancien
 	public static final WWClass ANGEL = new Angel();					//Ange
 	
-	public static final WWClass[] VALUES = new WWClass[]{SEER, WEREWOLF, SIMPLE_VILLAGER, LITTLE_GIRL, WITCH, CUPIDON, SALVATOR, ELDER, ANGEL};
-	public static final WWClass[] NIGHT_ORDER = new WWClass[]{CUPIDON, SALVATOR, SEER, WEREWOLF, WITCH};
+	private static final WWClass[] VALUES = new WWClass[]{SEER, WEREWOLF, SIMPLE_VILLAGER, LITTLE_GIRL, WITCH, CUPIDON, SALVATOR, ELDER, ANGEL};
+	private static final WWClass[] NIGHT_ORDER = new WWClass[]{CUPIDON, SALVATOR, SEER, WEREWOLF, WITCH};
 	
 	private String prefix;
 	private String id;
@@ -46,6 +47,16 @@ public abstract class WWClass
 		this.disguise = disguise;
 		this.id = id;
 		this.disabled = false;
+	}
+	
+	public static WWClass[] getValues()
+	{
+		return Arrays.copyOf(VALUES, VALUES.length);
+	}
+	
+	public static WWClass[] getNightOrder()
+	{
+		return Arrays.copyOf(NIGHT_ORDER, NIGHT_ORDER.length);
 	}
 	
 	public String getPrefix()

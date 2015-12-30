@@ -1,5 +1,7 @@
 package net.samagames.werewolves.game;
 
+import java.util.logging.Level;
+
 import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.EntityHuman.EnumBedResult;
 
@@ -59,6 +61,7 @@ public class WWHouse
 				Bukkit.getLogger().severe("[WereWolves] Error : can't set player " + player.getName() + " in bed (" + bed.getBlockX() + ", " + bed.getBlockY() + ", " + bed.getBlockZ() + ", result=" + result + ").");
 		} catch (IllegalArgumentException ex) {
 			Bukkit.getLogger().severe("[WereWolves] Invalid bed location ! (" + bed.getBlockX() + ", " + bed.getBlockY() + ", " + bed.getBlockZ() + ").");
+			Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
 		}
 	}
 	

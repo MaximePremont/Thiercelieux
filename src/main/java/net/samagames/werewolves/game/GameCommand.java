@@ -27,7 +27,9 @@ public class GameCommand implements CommandExecutor
 				break ;
 			case NIGHT:
 				plugin.getGame().nextNightEvent();
+				break ;
 			default:
+				break ;
 			}
 		if (arg3.length == 1 && arg3[0].equalsIgnoreCase("check") && arg0.hasPermission("thiercelieux.check"))
 			plugin.getGame().checkEnd();

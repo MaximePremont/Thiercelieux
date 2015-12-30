@@ -1,6 +1,7 @@
 package net.samagames.werewolves.util;
 
 import java.util.UUID;
+import java.util.logging.Level;
 
 import net.minecraft.server.v1_8_R3.DataWatcher;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
@@ -50,7 +51,7 @@ public class PacketUtils
 			Reflection.setValue(packet, "k", (byte)0);
 			Reflection.setValue(packet, "l", getDataWatcher(name));
 		} catch (NoSuchFieldException | IllegalAccessException e) {
-			e.printStackTrace();
+			Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
 		}
 		for (Player p : Bukkit.getOnlinePlayers())
 			if (p instanceof CraftPlayer)

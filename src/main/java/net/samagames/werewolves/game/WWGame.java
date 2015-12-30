@@ -122,7 +122,7 @@ public abstract class WWGame extends Game<WWPlayer>
 	public void nextNightEvent()
 	{
 		this.cancelPassTask();
-		WWClass[] classes = WWClass.NIGHT_ORDER;
+		WWClass[] classes = WWClass.getNightOrder();
 		if (currentevent >= 0 && currentevent < classes.length)
 		{
 			Set<WWPlayer> oldplayers = this.getPlayersByClass(classes[currentevent]);
@@ -454,7 +454,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			list.add(ChatUtils.getCenteredText("Le village est sauvé !"));
 			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
 			Set<WWPlayer> players = new HashSet<WWPlayer>();
-			for (WWClass clazz : WWClass.VALUES)
+			for (WWClass clazz : WWClass.getValues())
 				if (clazz.getWinType() == WinType.INNOCENTS)
 				{
 					Set<WWPlayer> tmp = this.getPlayersByClass(clazz);
@@ -472,7 +472,7 @@ public abstract class WWGame extends Game<WWPlayer>
 			list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Tout le village a été dévoré !"));
 			coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
 			Set<WWPlayer> players = new HashSet<WWPlayer>();
-			for (WWClass clazz : WWClass.VALUES)
+			for (WWClass clazz : WWClass.getValues())
 				if (clazz.getWinType() == WinType.WOLVES)
 				{
 					Set<WWPlayer> tmp = this.getPlayersByClass(clazz);
@@ -486,7 +486,7 @@ public abstract class WWGame extends Game<WWPlayer>
 		if (total == 1 && result == 4)
 		{
 			WWPlayer player = null;
-			for (WWClass clazz : WWClass.VALUES)
+			for (WWClass clazz : WWClass.getValues())
 				if (clazz.getWinType() == WinType.ALONE)
 				{
 					Set<WWPlayer> tmp = this.getPlayersByClass(clazz);
@@ -561,7 +561,7 @@ public abstract class WWGame extends Game<WWPlayer>
 	{
 		if (getGameState() != GameState.NIGHT)
 			return false;
-		return WWClass.NIGHT_ORDER[currentevent].equals(clazz);
+		return WWClass.getNightOrder()[currentevent].equals(clazz);
 	}
 	
 	public Set<WWPlayer> getDeadPlayers()

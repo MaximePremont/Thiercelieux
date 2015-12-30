@@ -1,5 +1,7 @@
 package net.samagames.werewolves.util;
 
+import java.util.logging.Level;
+
 import net.samagames.werewolves.game.WWHouse;
 
 import org.bukkit.Bukkit;
@@ -28,7 +30,7 @@ public class JsonUtils
 	        Location display = new Location(world, dx, dy, dz);
 	        return new WWHouse(display, bed);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
 			return null;
 		}
 	}
@@ -38,22 +40,20 @@ public class JsonUtils
         JsonObject json = object.getAsJsonObject();
         String w = json.get("world").getAsString();
         if (w == null)
-        	return null;
+            return null;
         World world = Bukkit.getWorld(w);
         if (world == null)
-        	return null;
+            return null;
         double x = json.get("x").getAsDouble();
         double y = json.get("y").getAsDouble();
         double z = json.get("z").getAsDouble();
-        try
-        {
-            float yaw = (float)json.get("yaw").getAsDouble();
-            float pitch = (float)json.get("pitch").getAsDouble();
-            return new Location(world, x, y, z, yaw, pitch);
-        }
-        catch (UnsupportedOperationException | NullPointerException ex)
-        {
-            return new Location(world, x, y, z);
-        }
+        Location loc = new Location(world, x, y, z);
+        JsonElement elem = json.get("yaw");
+        if (elem != null)
+            loc.setYaw(elem.getAsFloat());
+        elem = json.get("pitch");
+        if (elem != null)
+            loc.setPitch(elem.getAsFloat());
+        return loc;
     }
 }
