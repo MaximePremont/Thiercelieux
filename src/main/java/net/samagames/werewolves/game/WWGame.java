@@ -288,8 +288,11 @@ public abstract class WWGame extends Game<WWPlayer>
 			}
 			player.setPlayedClass(newclass);
 			Player p = player.getPlayerIfOnline();
-			Titles.sendTitle(p, 5, 70, 5, "", ChatColor.GOLD + "Vous êtes : " + newclass.getName());
-			p.sendMessage(coherenceMachine.getGameTag() + ChatColor.GOLD + " Vous êtes : " + newclass.getName());
+			if (newclass != null)
+			{
+				Titles.sendTitle(p, 5, 70, 5, "", ChatColor.GOLD + "Vous êtes : " + newclass.getName());
+				p.sendMessage(coherenceMachine.getGameTag() + ChatColor.GOLD + " Vous êtes : " + newclass.getName());
+			}
 			p.setExp(0);
 			p.setLevel(0);
 			n = list.get(newclass);
