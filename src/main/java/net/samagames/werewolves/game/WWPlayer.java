@@ -12,111 +12,111 @@ import org.bukkit.potion.PotionEffectType;
 
 public class WWPlayer extends GamePlayer
 {
-	private WWClass clazz;
-	private WWHouse house;
-	private boolean secondturn;
-	private WWPlayer couple;
-	private boolean isProtected;
-	
-	public WWPlayer(Player player)
-	{
-		super(player);
-		clazz = null;
-		house = null;
-		secondturn = false;
-		couple = null;
-		isProtected = false;
-	}
-	
-	public WWClass getPlayedClass()
-	{
-		return clazz;
-	}
-	
-	public void setPlayedClass(WWClass newClass)
-	{
-		clazz = newClass;
-	}
+    private WWClass clazz;
+    private WWHouse house;
+    private boolean secondturn;
+    private WWPlayer couple;
+    private boolean isProtected;
 
-	public void setHouse(WWHouse wwHouse)
-	{
-		house = wwHouse;
-	}
-	
-	public WWHouse getHouse()
-	{
-		return house;
-	}
-	
-	public boolean isInSecondTurn()
-	{
-		return secondturn;
-	}
-	
-	public void setSecondTurn(boolean s)
-	{
-		secondturn = s;
-	}
-	
-	public void setCouple(WWPlayer other)
-	{
-		couple = other;
-	}
-	
-	public WWPlayer getCouple()
-	{
-		return couple;
-	}
-	
-	public boolean isInCouple()
-	{
-		return (couple != null);
-	}
-	
-	@Override
-	public void setSpectator()
-	{
-		this.spectator = true;
-		Player p = this.getPlayerIfOnline();
-		if (p == null)
-			return ;
-		p.removePotionEffect(PotionEffectType.BLINDNESS);
-		p.setGameMode(GameMode.ADVENTURE);
-		p.setAllowFlight(true);
-		p.setFlying(true);
-		for (Player player : Bukkit.getOnlinePlayers())
+    public WWPlayer(Player player)
+    {
+        super(player);
+        clazz = null;
+        house = null;
+        secondturn = false;
+        couple = null;
+        isProtected = false;
+    }
+
+    public WWClass getPlayedClass()
+    {
+        return clazz;
+    }
+
+    public void setPlayedClass(WWClass newClass)
+    {
+        clazz = newClass;
+    }
+
+    public void setHouse(WWHouse wwHouse)
+    {
+        house = wwHouse;
+    }
+
+    public WWHouse getHouse()
+    {
+        return house;
+    }
+
+    public boolean isInSecondTurn()
+    {
+        return secondturn;
+    }
+
+    public void setSecondTurn(boolean s)
+    {
+        secondturn = s;
+    }
+
+    public void setCouple(WWPlayer other)
+    {
+        couple = other;
+    }
+
+    public WWPlayer getCouple()
+    {
+        return couple;
+    }
+
+    public boolean isInCouple()
+    {
+        return (couple != null);
+    }
+
+    @Override
+    public void setSpectator()
+    {
+        this.spectator = true;
+        Player p = this.getPlayerIfOnline();
+        if (p == null)
+            return ;
+        p.removePotionEffect(PotionEffectType.BLINDNESS);
+        p.setGameMode(GameMode.ADVENTURE);
+        p.setAllowFlight(true);
+        p.setFlying(true);
+        for (Player player : Bukkit.getOnlinePlayers())
             player.hidePlayer(p);
-		if (house != null)
-			house.setDeadName(p.getName());
-		if (!moderator)
-			PacketUtils.sendWorldBorder(p);
-	}
-	
-	
-	public boolean isProtected()
-	{
-		return isProtected;
-	}
-	
-	public void setProtected(boolean p)
-	{
-		isProtected = p;
-	}
-	
-	public void win()
-	{
-		addCoins(10, "Victoire !");
-		addStars(1, "Victoire !");
-	}
-	
-	public String getDisplayName()
-	{
-		OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
-		String name;
-		if (off.isOnline())
-			name = off.getPlayer().getDisplayName();
-		else
-			name = off.getName();
-		return name;
-	}
+        if (house != null)
+            house.setDeadName(p.getName());
+        if (!moderator)
+            PacketUtils.sendWorldBorder(p);
+    }
+
+
+    public boolean isProtected()
+    {
+        return isProtected;
+    }
+
+    public void setProtected(boolean p)
+    {
+        isProtected = p;
+    }
+
+    public void win()
+    {
+        addCoins(10, "Victoire !");
+        addStars(1, "Victoire !");
+    }
+
+    public String getDisplayName()
+    {
+        OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
+        String name;
+        if (off.isOnline())
+            name = off.getPlayer().getDisplayName();
+        else
+            name = off.getName();
+        return name;
+    }
 }

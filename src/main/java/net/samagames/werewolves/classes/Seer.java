@@ -11,40 +11,40 @@ import org.bukkit.inventory.ItemStack;
 
 public class Seer extends WWClass
 {
-	private boolean locked;
-	
-	protected Seer()
-	{
-		super("seer", "La", "&5Voyante", new ItemStack(Material.EYE_OF_ENDER), new String[]{"Une fois par nuit, regardez le", "rôle d'un autre joueur"}, null);
-		locked = false;
-	}
+    private boolean locked;
 
-	@Override
-	public boolean canPlayAtNight()
-	{
-		return true;
-	}
-	
-	@Override
-	public WinType getWinType()
-	{
-		return WinType.INNOCENTS;
-	}
+    protected Seer()
+    {
+        super("seer", "La", "&5Voyante", new ItemStack(Material.EYE_OF_ENDER), new String[]{"Une fois par nuit, regardez le", "rôle d'un autre joueur"}, null);
+        locked = false;
+    }
 
-	@Override
-	public String getTextAtNight()
-	{
-		return "Choisissez le joueur donc vous voulez voir la carte";
-	}
-	
-	@Override
-	public void handlePlayerClick(WWPlugin plugin, WWPlayer source, WWPlayer target)
-	{
-		if (locked || target.isSpectator() || target.isModerator() || !target.isOnline())
-			return ;
-		locked = true;
-		Titles.sendTitle(source.getPlayerIfOnline(), 5, 50, 5, ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Rôle de " + target.getDisplayName(), target.getPlayedClass().getName());
-		plugin.getGame().cancelPassTask();
-		plugin.getServer().getScheduler().runTaskLater(plugin, () -> plugin.getGame().nextNightEvent(), 60);
-	}
+    @Override
+    public boolean canPlayAtNight()
+    {
+        return true;
+    }
+
+    @Override
+    public WinType getWinType()
+    {
+        return WinType.INNOCENTS;
+    }
+
+    @Override
+    public String getTextAtNight()
+    {
+        return "Choisissez le joueur donc vous voulez voir la carte";
+    }
+
+    @Override
+    public void handlePlayerClick(WWPlugin plugin, WWPlayer source, WWPlayer target)
+    {
+        if (locked || target.isSpectator() || target.isModerator() || !target.isOnline())
+            return ;
+        locked = true;
+        Titles.sendTitle(source.getPlayerIfOnline(), 5, 50, 5, ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Rôle de " + target.getDisplayName(), target.getPlayedClass().getName());
+        plugin.getGame().cancelPassTask();
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> plugin.getGame().nextNightEvent(), 60);
+    }
 }

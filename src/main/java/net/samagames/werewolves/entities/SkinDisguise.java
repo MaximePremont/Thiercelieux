@@ -6,19 +6,19 @@ import org.bukkit.entity.Player;
 
 public class SkinDisguise extends WWDisguise
 {
-	
-	public SkinDisguise(String name)
-	{
-		super(null);
-	}
-	
-	@Override
-	public void disguisePlayer(Player player)
-	{
-		if (!(player instanceof CraftPlayer))
-			return ;
-		//TODO
-	}
-	
-	//WereWolf username = SM_Werewolf
+
+    public SkinDisguise(String name)
+    {
+        super(null);
+    }
+
+    @Override
+    public void disguisePlayer(Player player)
+    {
+        if (!(player instanceof CraftPlayer))
+            return ;
+        //TODO
+    }
+
+    //WereWolf username = SM_Werewolf
 }
