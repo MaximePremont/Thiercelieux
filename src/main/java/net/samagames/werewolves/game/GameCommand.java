@@ -18,7 +18,7 @@ public class GameCommand implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3)
     {
-        if (arg3.length == 1 && arg3[0].equalsIgnoreCase("nextevent") && arg0.hasPermission("thiercelieux.nextevent"))
+        if (arg3.length == 1 && "nextevent".equalsIgnoreCase(arg3[0]) && arg0.hasPermission("thiercelieux.nextevent"))
             switch (plugin.getGame().getGameState())
             {
             case DAY_1:
@@ -31,7 +31,7 @@ public class GameCommand implements CommandExecutor
             default:
                 break ;
             }
-        if (arg3.length == 1 && arg3[0].equalsIgnoreCase("check") && arg0.hasPermission("thiercelieux.check"))
+        if (arg3.length == 1 && "check".equalsIgnoreCase(arg3[0]) && arg0.hasPermission("thiercelieux.check"))
             plugin.getGame().checkEnd();
         return true;
     }

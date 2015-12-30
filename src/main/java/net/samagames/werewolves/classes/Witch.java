@@ -120,7 +120,7 @@ public class Witch extends WWClass
             return ;
         Inventory inv = plugin.getServer().createInventory(null, InventoryType.BREWING, ChatColor.DARK_PURPLE + "Alambic de Sorcière");
         Set<WWPlayer> deads = plugin.getGame().getDeadPlayers();
-        ItemStack potion1 = ItemsUtil.setItemMeta(Material.POTION, 1, (short)8193, ChatColor.LIGHT_PURPLE + "Potion de vie", deads.size() == 0 ? new String[]{ChatColor.RED + "Aucun mort à sauver"} : null);
+        ItemStack potion1 = ItemsUtil.setItemMeta(Material.POTION, 1, (short)8193, ChatColor.LIGHT_PURPLE + "Potion de vie", deads.isEmpty() ? new String[]{ChatColor.RED + "Aucun mort à sauver"} : null);
         ItemStack potion2 = ItemsUtil.setItemMeta(Material.POTION, 1, (short)8268, ChatColor.DARK_PURPLE + "Potion de mort", null);
         ItemStack emptypotion1 = ItemsUtil.setItemMeta(Material.GLASS_BOTTLE, 1, (short)0, ChatColor.LIGHT_PURPLE + "Potion de vie", new String[]{ChatColor.RED + "Potion déjà utilisée"});
         ItemStack emptypotion2 = ItemsUtil.setItemMeta(Material.GLASS_BOTTLE, 1, (short)0, ChatColor.LIGHT_PURPLE + "Potion de mort", new String[]{ChatColor.RED + "Potion déjà utilisée"});

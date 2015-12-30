@@ -70,7 +70,7 @@ public class WWPlayer extends GamePlayer
 
     public boolean isInCouple()
     {
-        return (couple != null);
+        return couple != null;
     }
 
     @Override

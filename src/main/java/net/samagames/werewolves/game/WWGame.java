@@ -153,7 +153,7 @@ public abstract class WWGame extends Game<WWPlayer>
             nextNightEvent();
             return ;
         }
-        broadcastMessage(this.getCoherenceMachine().getGameTag() + ChatColor.WHITE + " " + classes[currentevent].getPrefix() + " " + classes[currentevent].getName() + ChatColor.WHITE + " se réveille" + (classes[currentevent].getPrefix().equals("Les") ? "nt" : "") + " !");
+        broadcastMessage(this.getCoherenceMachine().getGameTag() + ChatColor.WHITE + " " + classes[currentevent].getPrefix() + " " + classes[currentevent].getName() + ChatColor.WHITE + " se réveille" + ("Les".equals(classes[currentevent].getPrefix()) ? "nt" : "") + " !");
         String n = classes[currentevent].getTextAtNight();
         WWDisguise disguise = classes[currentevent].getDisguise();
         for (WWPlayer player : players)
@@ -190,7 +190,7 @@ public abstract class WWGame extends Game<WWPlayer>
                     startNight();
                 return ;
             }
-            if (tops.size() == 0)
+            if (tops.isEmpty())
                 broadcastMessage(coherenceMachine.getGameTag() + ChatColor.WHITE + " Aucun choix de fait, un deuxième vote sera nécessaire !");
             else
                 broadcastMessage(coherenceMachine.getGameTag() + ChatColor.WHITE + " Egalité dans les voix, un deuxième vote sera nécessaire !");
@@ -249,10 +249,9 @@ public abstract class WWGame extends Game<WWPlayer>
         }
         broadcastMessage(sb.toString());
         boolean ok = true;
-        for (WWPlayer player : deaths.keySet())
-            if (player.getPlayedClass() != null)
-                if (!player.getPlayedClass().handleDeath(plugin, player, deaths.get(player)))
-                    ok = false;
+        for (Entry<WWPlayer, WWClass> entry : deaths.entrySet())
+            if (entry.getKey().getPlayedClass() != null && !entry.getKey().getPlayedClass().handleDeath(plugin, entry.getKey(), entry.getValue()))
+                ok = false;
         for (WWPlayer player : lovers)
         {
             player.setSpectator();

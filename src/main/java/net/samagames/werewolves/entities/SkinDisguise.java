@@ -6,10 +6,12 @@ import org.bukkit.entity.Player;
 
 public class SkinDisguise extends WWDisguise
 {
-
-    public SkinDisguise(String name)
+    private String uuid;
+    
+    public SkinDisguise(String uuid)
     {
         super(null);
+        this.uuid = uuid;
     }
 
     @Override
@@ -17,6 +19,7 @@ public class SkinDisguise extends WWDisguise
     {
         if (!(player instanceof CraftPlayer))
             return ;
+        uuid.getClass();
         //TODO
     }
 

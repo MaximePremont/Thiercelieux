@@ -71,14 +71,10 @@ public class PacketUtils
         if (!(player instanceof CraftPlayer))
             return ;
         PacketPlayOutNamedEntitySpawn packet = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
-        for (Player p : Bukkit.getOnlinePlayers())
-            if (p instanceof CraftPlayer && !p.equals(player))
-                ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
-    }
-
-    public static void broadcastSpawnPlayerPacket(Player player, String url)
-    {
-
+        if (player.getUniqueId().equals(uuid))
+            for (Player p : Bukkit.getOnlinePlayers())
+                if (p instanceof CraftPlayer && !p.equals(player))
+                    ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
     }
 
     public static void sendActionBarMessage(Player player, String msg)
