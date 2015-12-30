@@ -11,9 +11,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 public class ItemsUtil
 {
-    private ItemsUtil(){}
-
     public static final ItemStack SELECTOR = setItemMeta(Material.NETHER_STAR, 1, (short)0, "&b&lSelecteur", new String[]{"Utilisez-le pour voter !"});
+
+    private ItemsUtil(){}
 
     public static ItemStack setItemMeta(ItemStack item, String name, String[] lore)
     {

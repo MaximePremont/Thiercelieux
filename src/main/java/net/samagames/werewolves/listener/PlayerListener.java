@@ -38,7 +38,7 @@ public class PlayerListener implements Listener
     public void onInteract(PlayerInteractEvent ev)
     {
         if (ev.getItem() != null && ev.getItem().getType() == Material.NETHER_STAR && plugin.getGame().getGameState() == GameState.WAITING)
-            ;//TODO: Class Selector
+            ev.getClass();//TODO: Class Selector
         ev.setCancelled(true);
         if (ev.getItem() != null && ev.getItem().getType() == ItemsUtil.SELECTOR.getType() && plugin.getGame().getGameState() == GameState.NIGHT)
         {

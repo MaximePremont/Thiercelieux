@@ -13,21 +13,21 @@ import org.bukkit.Bukkit;
 
 public class SamaBOTConnector
 {
+    private static String hostname = "0.0.0.0";
+    private static int portnumber = 6789;
+    private static final String OK = "OK";
+    private static final String NOK = "NOK";
+    
     private SamaBOTConnector(){}
-
-    private static final String hostName = "0.0.0.0";
-    private static final int portNumber = 6789;
-    protected static final String OK = "OK";
-    protected static final String NOK = "NOK";
 
     public static synchronized String[] createChannel(String name, String[] players)
     {
         try
         {
-            Socket echoSocket = new Socket(hostName, portNumber);
+            Socket echoSocket = new Socket(hostname, portnumber);
             PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
             StringBuilder sb = new StringBuilder();
-            sb.append(hostName);//Need refactor
+            sb.append(hostname);//Need refactor
             sb.append(" 6790 1 ");
             sb.append(name);
             if (players != null)
@@ -47,6 +47,8 @@ public class SamaBOTConnector
             if (message.equals(NOK))
                 return new String[]{"ERROR_ERROR_ERROR"};
             String[] result = message.split(":");
+            if (!result[0].equals(OK))
+                return new String[]{"ERROR_ERROR_ERROR"};
             return Arrays.copyOfRange(result, 1, result.length);
         } catch (IOException e) {
             Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);

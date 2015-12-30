@@ -17,15 +17,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public abstract class WWClass
 {
-    public static final WWClass SIMPLE_VILLAGER = new SimpleVillager();	//Villageois
-    public static final WWClass SEER = new Seer();						//Voyante
-    public static final WWClass WEREWOLF = new WereWolf();				//Loup Garou
-    public static final WWClass LITTLE_GIRL = new LittleGirl();			//Petite Fille
-    public static final WWClass WITCH = new Witch();					//Sorcière
-    public static final WWClass CUPIDON = new Cupidon();				//Cupidon
-    public static final WWClass SALVATOR = new Salvator();				//Salvateur
-    public static final WWClass ELDER = new Elder();					//Ancien
-    public static final WWClass ANGEL = new Angel();					//Ange
+    public static final WWClass SIMPLE_VILLAGER = new SimpleVillager(); //Villageois
+    public static final WWClass SEER = new Seer();                      //Voyante
+    public static final WWClass WEREWOLF = new WereWolf();              //Loup Garou
+    public static final WWClass LITTLE_GIRL = new LittleGirl();         //Petite Fille
+    public static final WWClass WITCH = new Witch();                    //Sorcière
+    public static final WWClass CUPIDON = new Cupidon();                //Cupidon
+    public static final WWClass SALVATOR = new Salvator();              //Salvateur
+    public static final WWClass ELDER = new Elder();                    //Ancien
+    public static final WWClass ANGEL = new Angel();                    //Ange
 
     private static final WWClass[] VALUES = new WWClass[]{SEER, WEREWOLF, SIMPLE_VILLAGER, LITTLE_GIRL, WITCH, CUPIDON, SALVATOR, ELDER, ANGEL};
     private static final WWClass[] NIGHT_ORDER = new WWClass[]{CUPIDON, SALVATOR, SEER, WEREWOLF, WITCH};
