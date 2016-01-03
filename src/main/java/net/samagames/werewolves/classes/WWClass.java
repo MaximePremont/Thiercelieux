@@ -28,7 +28,7 @@ public abstract class WWClass
     public static final WWClass ANGEL = new Angel();                    //Ange
 
     private static final WWClass[] VALUES = new WWClass[]{SEER, WEREWOLF, SIMPLE_VILLAGER, LITTLE_GIRL, WITCH, CUPIDON, SALVATOR, ELDER, ANGEL};
-    private static final WWClass[] NIGHT_ORDER = new WWClass[]{CUPIDON, SALVATOR, SEER, WEREWOLF, WITCH};
+    private static final WWClass[] NIGHT_ORDER = new WWClass[]{CUPIDON, SALVATOR, SEER, WEREWOLF, WITCH, ANGEL};
 
     private String prefix;
     private String id;

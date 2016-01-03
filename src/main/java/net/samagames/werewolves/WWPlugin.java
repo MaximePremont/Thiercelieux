@@ -48,21 +48,8 @@ public class WWPlugin extends JavaPlugin
         getServer().getScheduler().runTaskTimer(this, new InfiniteSleepTask(this), 50, 50);
         getServer().getPluginCommand("game").setExecutor(new GameCommand(this));
 
-        for (WWClass clazz : WWClass.getValues())
-        {
-            JsonElement element = api.getGameManager().getGameProperties().getOption(clazz.getID(), null);
-            if (element == null)
-                continue ;
-            int n = element.getAsInt();
-            if (n != 0)
-            {
-                roles.put(clazz, n);
-                getServer().getLogger().info("[WWPlugin] Class loaded " + clazz.getID() + " x" + n);
-                if (clazz == WWClass.WITCH)
-                    ((Witch)clazz).setHouseLocation(JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("witch-house", null)),
-                            JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("witch-stand", null)));
-            }
-        }
+        loadClassesConfiguration();
+        
         if (api.getGameManager().getGameProperties().getOption("vocal", new JsonPrimitive(false)).getAsBoolean())
             game = new VocalGame(this);
         else
@@ -89,6 +76,25 @@ public class WWPlugin extends JavaPlugin
             getServer().getLogger().severe("[WWPlugin] Problem in server slots (min != max != roles != houses) or missing spawn");
             getServer().shutdown();
             return ;
+        }
+    }
+
+    private void loadClassesConfiguration()
+    {
+        for (WWClass clazz : WWClass.getValues())
+        {
+            JsonElement element = api.getGameManager().getGameProperties().getOption(clazz.getID(), null);
+            if (element == null)
+                continue ;
+            int n = element.getAsInt();
+            if (n != 0)
+            {
+                roles.put(clazz, n);
+                getServer().getLogger().info("[WWPlugin] Class loaded " + clazz.getID() + " x" + n);
+                if (clazz == WWClass.WITCH)
+                    ((Witch)clazz).setHouseLocation(JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("witch-house", null)),
+                            JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("witch-stand", null)));
+            }
         }
     }
 
