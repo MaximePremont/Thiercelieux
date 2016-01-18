@@ -582,6 +582,8 @@ public abstract class WWGame extends Game<WWPlayer>
         for (Iterator<Entry<UUID, UUID>> it = list.entrySet().iterator(); it.hasNext();)
         {
             Entry<UUID, UUID> entry = it.next();
+            if (entry.getValue() == null)
+                continue ;
             Integer i = counts.get(entry.getValue());
             if (i == null)
                 i = 0;

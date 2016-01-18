@@ -1,10 +1,8 @@
 package net.samagames.tssamabot;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -13,44 +11,44 @@ import org.bukkit.Bukkit;
 
 public class SamaBOTConnector
 {
-    private static String hostname = "0.0.0.0";
-    private static int portnumber = 6789;
+    private String hostname;
+    private int portnumber;
     private static final String OK = "OK";
     private static final String NOK = "NOK";
     
-    private SamaBOTConnector(){}
+    public SamaBOTConnector(String host, int port)
+    {
+        hostname = host;
+        portnumber = port;
+    }
 
-    public static synchronized String[] createChannel(String name, String[] players)
+    public synchronized String[] createChannel(String name, String[] players)
     {
         try
         {
-            Socket echoSocket = new Socket(hostname, portnumber);
-            PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
+            Socket socket = new Socket(hostname, portnumber);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             StringBuilder sb = new StringBuilder();
-            sb.append(hostname);//Need refactor
-            sb.append(" 6790 1 ");
+            sb.append("1 ");
             sb.append(name);
             if (players != null)
                 for (String p : players)
                     sb.append(" " + p);
             out.println(sb.toString());
-            echoSocket.close();
             out.close();
-
-            ServerSocket serverSocket = new ServerSocket(6790);
-            Socket connectionSocket = serverSocket.accept();
-            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));            
             String message = inFromClient.readLine();
             inFromClient.close();
-            connectionSocket.close();
-            serverSocket.close();
+            socket.close();
+            
             if (message.equals(NOK))
                 return new String[]{"ERROR_ERROR_ERROR"};
             String[] result = message.split(":");
             if (!result[0].equals(OK))
                 return new String[]{"ERROR_ERROR_ERROR"};
             return Arrays.copyOfRange(result, 1, result.length);
-        } catch (IOException e) {
+        } catch (Throwable e) {
             Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
         return new String[]{"ERROR_ERROR_ERROR"}; //Désolé, à cause de Sonar jpeux pas return null
