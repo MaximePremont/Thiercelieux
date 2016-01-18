@@ -48,7 +48,7 @@ public class SamaBOTConnector
             if (!result[0].equals(OK))
                 return new String[]{"ERROR_ERROR_ERROR"};
             return Arrays.copyOfRange(result, 1, result.length);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
         return new String[]{"ERROR_ERROR_ERROR"}; //Désolé, à cause de Sonar jpeux pas return null

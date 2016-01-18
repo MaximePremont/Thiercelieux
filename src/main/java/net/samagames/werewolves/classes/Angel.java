@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.samagames.tools.chat.ChatUtils;
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.game.WWPlayer;
+import net.samagames.werewolves.util.GameState;
 import net.samagames.werewolves.util.WinType;
 
 import org.bukkit.Bukkit;
@@ -42,7 +43,7 @@ public class Angel extends WWClass
     public boolean handleDeath(WWPlugin plugin, WWPlayer who, WWClass by)
     {
         Bukkit.broadcastMessage("" + turns);
-        if (turns == 2)
+        if (turns == 2 && (plugin.getGame().getGameState() == GameState.DAY_1 || plugin.getGame().getGameState() == GameState.DAY_2)) 
         {
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 ArrayList<String> list = new ArrayList<String>();
