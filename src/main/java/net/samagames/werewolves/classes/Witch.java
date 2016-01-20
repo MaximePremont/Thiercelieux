@@ -140,15 +140,15 @@ public class Witch extends WWClass
         if (item == null)
             return false;
         if (i.getName().equals(ChatColor.DARK_PURPLE + "Alambic de Sorcière"))
-            return this.onStandInventoryClick(plugin, source, i, item);
+            return this.onStandInventoryClick(plugin, source, item);
         if (i.getName().equals(ChatColor.LIGHT_PURPLE + POTION_LIFE))
-            return this.onLifePotionInventoryClick(plugin, source, i, item);
+            return this.onLifePotionInventoryClick(plugin, item);
         if (i.getName().equals(ChatColor.DARK_PURPLE + POTION_DEATH))
-            return this.onDeathPotionInventoryClick(plugin, source, i, item);
+            return this.onDeathPotionInventoryClick(plugin, item);
         return false;
     }
     
-    private boolean onDeathPotionInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack item)
+    private boolean onDeathPotionInventoryClick(WWPlugin plugin, ItemStack item)
     {
         if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
             return true;
@@ -172,7 +172,7 @@ public class Witch extends WWClass
         return true;
     }
     
-    private boolean onLifePotionInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack item)
+    private boolean onLifePotionInventoryClick(WWPlugin plugin, ItemStack item)
     {
         if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
             return true;
@@ -195,8 +195,8 @@ public class Witch extends WWClass
         openStand(plugin, wwp);
         return true;
     }
-
-    private boolean onStandInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack item)
+    
+    private boolean onStandInventoryClick(WWPlugin plugin, WWPlayer source, ItemStack item)
     {
         if (item.getType() == Material.BARRIER)
         {
