@@ -74,13 +74,13 @@ public class VocalGame extends WWGame
         this.broadcastMessage(ChatColor.RED + " /!\\ Si vous n'êtes pas sur le TeamSpeak (ts.samagames.net), vous serez ejecté de la partie.");
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             String[] players = bot.createChannel(plugin.getApi().getServerName().split("_")[1].substring(0, 8).toUpperCase(), names);
-            if (players.length == 1 && "ERROR_ERROR_ERROR".equals(players[0]))
+            if (players.length == 1 && SamaBOTConnector.ERROR.equals(players[0]))
             {
                 for (WWPlayer player : this.getInGamePlayers().values())
                 {
                     if (!player.isOnline())
                         continue ;
-                    plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getApi().getGameManager().kickPlayer(player.getPlayerIfOnline(), "Impossible de créer le channel. Contactez un administrateur."));
+                    plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getApi().getGameManager().kickPlayer(player.getPlayerIfOnline(), "Impossible de créer le channel sur le TeamSpeak. Contactez un administrateur."));
                 }
                 plugin.getServer().getScheduler().runTask(plugin, () -> plugin.getServer().shutdown());
             }

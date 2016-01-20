@@ -11,6 +11,8 @@ import org.bukkit.Bukkit;
 
 public class SamaBOTConnector
 {
+    public static final String ERROR = "ERROR_ERROR_ERROR";
+    
     private String hostname;
     private int portnumber;
     private static final String OK = "OK";
@@ -43,10 +45,10 @@ public class SamaBOTConnector
             socket.close();
             
             if (message.equals(NOK))
-                return new String[]{"ERROR_ERROR_ERROR"};
+                return new String[]{ERROR};
             String[] result = message.split(":");
             if (!result[0].equals(OK))
-                return new String[]{"ERROR_ERROR_ERROR"};
+                return new String[]{ERROR};
             return Arrays.copyOfRange(result, 1, result.length);
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
