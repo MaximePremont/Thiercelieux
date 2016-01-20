@@ -8,7 +8,6 @@ import net.samagames.werewolves.game.WWPlayer;
 import net.samagames.werewolves.util.GameState;
 import net.samagames.werewolves.util.WinType;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -42,7 +41,6 @@ public class Angel extends WWClass
     @Override
     public boolean handleDeath(WWPlugin plugin, WWPlayer who, WWClass by)
     {
-        Bukkit.broadcastMessage("" + turns);
         if (turns == 2 && (plugin.getGame().getGameState() == GameState.DAY_1 || plugin.getGame().getGameState() == GameState.DAY_2)) 
         {
             plugin.getServer().getScheduler().runTask(plugin, () -> {
