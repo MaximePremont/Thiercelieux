@@ -140,85 +140,94 @@ public class Witch extends WWClass
         if (item == null)
             return false;
         if (i.getName().equals(ChatColor.DARK_PURPLE + "Alambic de Sorcière"))
-        {
-            if (item.getType() == Material.BARRIER)
-            {
-                source.getPlayerIfOnline().closeInventory();
-                plugin.getGame().nextNightEvent();
-                return true;
-            }
-            if (item.getType() != Material.POTION)
-                return false;
-            Set<WWPlayer> deads = plugin.getGame().getDeadPlayers();
-            if (item.getDurability() == 8193 && !deads.isEmpty())
-            {
-                Inventory inv = plugin.getServer().createInventory(null, 27, ChatColor.LIGHT_PURPLE + POTION_LIFE);
-                for (WWPlayer player : deads)
-                    inv.addItem(ItemsUtil.createHead(player.getDisplayName()));
-                source.getPlayerIfOnline().openInventory(inv);
-                return true;
-            }
-            else if (item.getDurability() == 8268)
-            {
-                Inventory inv = plugin.getServer().createInventory(null, 27, ChatColor.DARK_PURPLE + POTION_DEATH);
-                for (WWPlayer wwp : plugin.getGame().getInGamePlayers().values())
-                {
-                    if (!wwp.isOnline() || wwp.isSpectator() || wwp.isModerator() || deads.contains(wwp))
-                        continue ;
-                    inv.addItem(ItemsUtil.createHead(wwp.getDisplayName()));
-                }
-                source.getPlayerIfOnline().openInventory(inv);
-                return true;
-            }
-            return true;
-        }
+            return this.onStandInventoryClick(plugin, source, i, item);
         if (i.getName().equals(ChatColor.LIGHT_PURPLE + POTION_LIFE))
-        {
-            if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
-                return true;
-            String owner = ((SkullMeta)item.getItemMeta()).getOwner();
-            if (owner == null)
-                return true;
-            Player p = plugin.getServer().getPlayerExact(owner);
-            if (p == null)
-                return true;
-            WWPlayer wwp = plugin.getGame().getPlayer(p.getUniqueId());
-            if (wwp == null)
-                return true;
-            if (!plugin.getGame().getDeadPlayers().contains(wwp))
-                return true;
-            Boolean[] pot = potions.get(wwp.getUUID());
-            if (pot == null || !pot[0])
-                return true;
-            pot[0] = false;
-            plugin.getGame().getDeadPlayers().remove(wwp);
-            openStand(plugin, wwp);
-            return true;
-        }
+            return this.onLifePotionInventoryClick(plugin, source, i, item);
         if (i.getName().equals(ChatColor.DARK_PURPLE + POTION_DEATH))
+            return this.onDeathPotionInventoryClick(plugin, source, i, item);
+        return false;
+    }
+    
+    private boolean onDeathPotionInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack item)
+    {
+        if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
+            return true;
+        String owner = ((SkullMeta)item.getItemMeta()).getOwner();
+        if (owner == null)
+            return true;
+        Player p = plugin.getServer().getPlayerExact(owner);
+        if (p == null)
+            return true;
+        WWPlayer wwp = plugin.getGame().getPlayer(p.getUniqueId());
+        if (wwp == null)
+            return true;
+        if (plugin.getGame().getDeadPlayers().contains(wwp))
+            return true;
+        Boolean[] pot = potions.get(wwp.getUUID());
+        if (pot == null || !pot[1])
+            return true;
+        pot[1] = false;
+        plugin.getGame().diePlayer(wwp, this);
+        openStand(plugin, wwp);
+        return true;
+    }
+    
+    private boolean onLifePotionInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack item)
+    {
+        if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
+            return true;
+        String owner = ((SkullMeta)item.getItemMeta()).getOwner();
+        if (owner == null)
+            return true;
+        Player p = plugin.getServer().getPlayerExact(owner);
+        if (p == null)
+            return true;
+        WWPlayer wwp = plugin.getGame().getPlayer(p.getUniqueId());
+        if (wwp == null)
+            return true;
+        if (!plugin.getGame().getDeadPlayers().contains(wwp))
+            return true;
+        Boolean[] pot = potions.get(wwp.getUUID());
+        if (pot == null || !pot[0])
+            return true;
+        pot[0] = false;
+        plugin.getGame().getDeadPlayers().remove(wwp);
+        openStand(plugin, wwp);
+        return true;
+    }
+
+    private boolean onStandInventoryClick(WWPlugin plugin, WWPlayer source, Inventory i, ItemStack item)
+    {
+        if (item.getType() == Material.BARRIER)
         {
-            if (item.getType() != Material.SKULL_ITEM || item.getDurability() != 3)
-                return true;
-            String owner = ((SkullMeta)item.getItemMeta()).getOwner();
-            if (owner == null)
-                return true;
-            Player p = plugin.getServer().getPlayerExact(owner);
-            if (p == null)
-                return true;
-            WWPlayer wwp = plugin.getGame().getPlayer(p.getUniqueId());
-            if (wwp == null)
-                return true;
-            if (plugin.getGame().getDeadPlayers().contains(wwp))
-                return true;
-            Boolean[] pot = potions.get(wwp.getUUID());
-            if (pot == null || !pot[1])
-                return true;
-            pot[1] = false;
-            plugin.getGame().diePlayer(wwp, this);
-            openStand(plugin, wwp);
+            source.getPlayerIfOnline().closeInventory();
+            plugin.getGame().nextNightEvent();
             return true;
         }
-        return false;
+        if (item.getType() != Material.POTION)
+            return false;
+        Set<WWPlayer> deads = plugin.getGame().getDeadPlayers();
+        if (item.getDurability() == 8193 && !deads.isEmpty())
+        {
+            Inventory inv = plugin.getServer().createInventory(null, 27, ChatColor.LIGHT_PURPLE + POTION_LIFE);
+            for (WWPlayer player : deads)
+                inv.addItem(ItemsUtil.createHead(player.getDisplayName()));
+            source.getPlayerIfOnline().openInventory(inv);
+            return true;
+        }
+        else if (item.getDurability() == 8268)
+        {
+            Inventory inv = plugin.getServer().createInventory(null, 27, ChatColor.DARK_PURPLE + POTION_DEATH);
+            for (WWPlayer wwp : plugin.getGame().getInGamePlayers().values())
+            {
+                if (!wwp.isOnline() || wwp.isSpectator() || wwp.isModerator() || deads.contains(wwp))
+                    continue ;
+                inv.addItem(ItemsUtil.createHead(wwp.getDisplayName()));
+            }
+            source.getPlayerIfOnline().openInventory(inv);
+            return true;
+        }
+        return true;
     }
 
     public void setHouseLocation(Location h, Location s)
