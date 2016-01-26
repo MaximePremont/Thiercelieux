@@ -1,0 +1,16 @@
+*.class
+.classpath
+.project
+
+# Package Files #
+*.jar
+*.war
+*.ear
+/bin
+/releases
+/target
+
+# Eclise Files
+.settings
+/.apt_generated
+/html
