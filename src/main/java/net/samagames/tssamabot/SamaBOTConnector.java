@@ -53,6 +53,6 @@ public class SamaBOTConnector
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
-        return new String[]{"ERROR_ERROR_ERROR"}; //Désolé, à cause de Sonar jpeux pas return null
+        return new String[]{ERROR}; //Désolé, à cause de Sonar jpeux pas return null
     }
 }
