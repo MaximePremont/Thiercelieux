@@ -49,9 +49,9 @@ public abstract class WWGame extends Game<WWPlayer>
         this.plugin = plugin;
         this.state = GameState.WAITING;
         world = plugin.getServer().getWorlds().get(0);
-        deaths = new HashMap<WWPlayer, WWClass>();
+        deaths = new HashMap<>();
         passtask = null;
-        votes = new HashMap<UUID, UUID>();
+        votes = new HashMap<>();
     }
 
     public void giveWaitingInventory(Player p)
@@ -116,7 +116,7 @@ public abstract class WWGame extends Game<WWPlayer>
         super.startGame();
         this.state = GameState.PREPARE;
         selectRoles();
-        Bukkit.getScheduler().runTaskLater(plugin, () -> startNight(), 80);
+        Bukkit.getScheduler().runTaskLater(plugin, this::startNight, 80);
     }
 
     public void nextNightEvent()
@@ -231,7 +231,7 @@ public abstract class WWGame extends Game<WWPlayer>
             broadcastMessage(this.coherenceMachine.getGameTag() + " Personne n'est mort " + day + ".");
             return true;
         }
-        List<WWPlayer> lovers = new ArrayList<WWPlayer>();
+        List<WWPlayer> lovers = new ArrayList<>();
         StringBuilder sb = new StringBuilder(this.coherenceMachine.getGameTag() + " Victime" + (deaths.size() == 1 ? "" : "s") + (state == GameState.NIGHT ? " de " + day : " d'" + day) + " : ");
         int i = 0;
         for (WWPlayer player : deaths.keySet())
@@ -309,7 +309,7 @@ public abstract class WWGame extends Game<WWPlayer>
 
     public Set<WWPlayer> getPlayersByClass(WWClass... clazz)
     {
-        Set<WWPlayer> set = new HashSet<WWPlayer>();
+        Set<WWPlayer> set = new HashSet<>();
         for (WWPlayer player : this.getInGamePlayers().values())
         {
             if (player.isSpectator() || player.isModerator() || !player.isOnline())
@@ -326,7 +326,7 @@ public abstract class WWGame extends Game<WWPlayer>
 
     public Set<WWPlayer> getPlayersByWinType(WinType... types)
     {
-        Set<WWPlayer> set = new HashSet<WWPlayer>();
+        Set<WWPlayer> set = new HashSet<>();
         for (WWPlayer player : this.getInGamePlayers().values())
         {
             if (player.isSpectator() || player.isModerator() || !player.isOnline())
@@ -388,7 +388,7 @@ public abstract class WWGame extends Game<WWPlayer>
     {
         if (gamePlayers.size() == 1) //Just for debug
             return false;
-        Map<WWClass, Integer> roles = new HashMap<WWClass, Integer>();
+        Map<WWClass, Integer> roles = new HashMap<>();
         for (WWPlayer player : this.getInGamePlayers().values())
         {
             if (player.isSpectator() || player.isModerator() || !player.isOnline() || player.getPlayedClass() == null)
@@ -414,7 +414,7 @@ public abstract class WWGame extends Game<WWPlayer>
         }
         if (total == 0)
         {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add("Tout le monde a perdu, il n'y a plus personne en vie dans le village...");
             list.add("Les bâtiments resteront abandonnées et tomberont en ruine bientôt.");
             coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
@@ -436,7 +436,7 @@ public abstract class WWGame extends Game<WWPlayer>
             }
             if (players[0].isInCouple() && players[1].isInCouple() && players[0].getCouple().equals(players[1]))
             {
-                ArrayList<String> list = new ArrayList<String>();
+                ArrayList<String> list = new ArrayList<>();
                 list.add(ChatUtils.getCenteredText("Le couple (" + players[0].getDisplayName() + ChatColor.WHITE + " & " + players[1].getDisplayName() + ChatColor.WHITE + ") a gagné !"));
                 list.add(ChatUtils.getCenteredText("Ils vivront heureux et auront beaucoup d'enfants <3"));
                 coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
@@ -448,11 +448,11 @@ public abstract class WWGame extends Game<WWPlayer>
         }
         if (result == 1)
         {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add(ChatUtils.getCenteredText("Les villageois ont gagnés !"));
             list.add(ChatUtils.getCenteredText("Le village est sauvé !"));
             coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
-            Set<WWPlayer> players = new HashSet<WWPlayer>();
+            Set<WWPlayer> players = new HashSet<>();
             for (WWClass clazz : WWClass.getValues())
                 if (clazz.getWinType() == WinType.INNOCENTS)
                 {
@@ -466,11 +466,11 @@ public abstract class WWGame extends Game<WWPlayer>
         }
         if (result == 2)
         {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Les loups ont gagné !"));
             list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Tout le village a été dévoré !"));
             coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
-            Set<WWPlayer> players = new HashSet<WWPlayer>();
+            Set<WWPlayer> players = new HashSet<>();
             for (WWClass clazz : WWClass.getValues())
                 if (clazz.getWinType() == WinType.WOLVES)
                 {
@@ -497,7 +497,7 @@ public abstract class WWGame extends Game<WWPlayer>
                 }
             if (player == null)
                 return false;
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + player.getPlayedClass().getPrefix() + player.getPlayedClass().getName() + ChatColor.WHITE + "(" + player.getDisplayName() + ChatColor.WHITE + ") a gagné !"));
             list.add(ChatUtils.getCenteredText(ChatColor.YELLOW + "Il / Elle est le dernier survivant en vie."));
             coherenceMachine.getTemplateManager().getBasicMessageTemplate().execute(list);
@@ -511,7 +511,7 @@ public abstract class WWGame extends Game<WWPlayer>
     public void finishGame()
     {
         state = GameState.END;
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> handleGameEnd(), 30);
+        plugin.getServer().getScheduler().runTaskLater(plugin, this::handleGameEnd, 30);
     }
 
     @Override
@@ -578,7 +578,7 @@ public abstract class WWGame extends Game<WWPlayer>
 
     public List<UUID> getTopVotes(Map<UUID, UUID> list)
     {
-        Map<UUID, Integer> counts = new HashMap<UUID, Integer>();
+        Map<UUID, Integer> counts = new HashMap<>();
         for (Iterator<Entry<UUID, UUID>> it = list.entrySet().iterator(); it.hasNext();)
         {
             Entry<UUID, UUID> entry = it.next();
@@ -590,7 +590,7 @@ public abstract class WWGame extends Game<WWPlayer>
             i++;
             counts.put(entry.getValue(), i);
         }
-        List<UUID> tops = new ArrayList<UUID>();
+        List<UUID> tops = new ArrayList<>();
         int top = 0;
         for (Iterator<Entry<UUID, Integer>> it = counts.entrySet().iterator(); it.hasNext();)
         {

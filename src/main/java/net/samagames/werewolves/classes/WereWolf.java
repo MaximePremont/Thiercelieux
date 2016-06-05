@@ -25,7 +25,7 @@ public class WereWolf extends WWClass
     public WereWolf()
     {
         super("werewolf", "Les", "&8&lLoup-Garou", new ItemStack(Material.ROTTEN_FLESH), new String[]{"La nuit, décidez d'une victime à dévorer. Miam"}, new SkinDisguise("da508ecc-dbd9-46c5-8095-47b91aa4ff5f"));
-        choices = new HashMap<UUID, UUID>();
+        choices = new HashMap<>();
     }
 
     @Override

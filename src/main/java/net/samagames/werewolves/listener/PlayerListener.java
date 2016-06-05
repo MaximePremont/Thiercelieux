@@ -17,11 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -158,12 +154,14 @@ public class PlayerListener implements Listener
         }
     }
 
+    @EventHandler
     public void onPotionDrink(PlayerItemConsumeEvent ev)
     {
         if (ev.getItem() != null && ev.getItem().getType().equals(Material.POTION))
             ev.setCancelled(true);
     }
 
+    @EventHandler
     public void onBedLeave(PlayerBedLeaveEvent ev)
     {
         WWPlayer wwp = plugin.getGame().getPlayer(ev.getPlayer().getUniqueId());
@@ -171,5 +169,11 @@ public class PlayerListener implements Listener
             return ;
         if (wwp.getHouse() != null)
             wwp.getHouse().teleportToBed(ev.getPlayer());
+    }
+
+    @EventHandler
+    public void onSecondHand(PlayerSwapHandItemsEvent ev)
+    {
+        ev.setCancelled(true);
     }
 }

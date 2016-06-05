@@ -4,7 +4,7 @@ import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.game.WWPlayer;
 import net.samagames.werewolves.util.GameState;
 
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class InfiniteSleepTask implements Runnable

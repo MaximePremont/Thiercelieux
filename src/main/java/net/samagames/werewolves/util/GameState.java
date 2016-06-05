@@ -7,5 +7,5 @@ public enum GameState
     DAY_2,
     NIGHT,
     WAITING,
-    PREPARE;
+    PREPARE
 }

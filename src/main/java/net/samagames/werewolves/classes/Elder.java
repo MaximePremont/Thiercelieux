@@ -1,5 +1,6 @@
 package net.samagames.werewolves.classes;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ public class Elder extends WWClass
     protected Elder()
     {
         super("elder", "L'", "&eAncien", new ItemStack(Material.LOG), new String[]{}, null);
+        this.protectedPlayers = new HashSet<>();
     }
 
     @Override

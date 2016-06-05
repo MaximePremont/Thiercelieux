@@ -4,5 +4,5 @@ public enum WinType
 {
     ALONE,
     INNOCENTS,
-    WOLVES;
+    WOLVES
 }

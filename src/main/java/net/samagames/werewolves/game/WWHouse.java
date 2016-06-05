@@ -2,13 +2,13 @@ package net.samagames.werewolves.game;
 
 import java.util.logging.Level;
 
-import net.minecraft.server.v1_8_R3.BlockPosition;
-import net.minecraft.server.v1_8_R3.EntityHuman.EnumBedResult;
+import net.minecraft.server.v1_9_R2.BlockPosition;
+import net.minecraft.server.v1_9_R2.EntityHuman.EnumBedResult;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -28,13 +28,12 @@ public class WWHouse
         armorstand = null;
     }
 
-    public WWHouse safeReset()
+    public void safeReset()
     {
         display.getWorld().loadChunk(display.getBlockX() / 16, display.getBlockZ() / 16);
         for (Entity e : display.getWorld().getEntities())
             if (e instanceof ArmorStand)
                 e.remove();
-        return this;
     }
 
     public void displayName(String name)

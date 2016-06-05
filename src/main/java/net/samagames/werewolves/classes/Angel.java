@@ -44,7 +44,7 @@ public class Angel extends WWClass
         if (turns == 2 && (plugin.getGame().getGameState() == GameState.DAY_1 || plugin.getGame().getGameState() == GameState.DAY_2)) 
         {
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                ArrayList<String> list = new ArrayList<String>();
+                ArrayList<String> list = new ArrayList<>();
                 list.add(ChatUtils.getCenteredText("L'ange (" + who.getDisplayName() + ") est mort au premier tour."));
                 list.add(ChatUtils.getCenteredText("Il gagne donc la partie !"));
                 plugin.getGame().getCoherenceMachine().getTemplateManager().getBasicMessageTemplate().execute(list);

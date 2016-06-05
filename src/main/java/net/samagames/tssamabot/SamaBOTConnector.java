@@ -24,6 +24,12 @@ public class SamaBOTConnector
         portnumber = port;
     }
 
+    /**
+    TODO
+    TODO Migrate all this to SGAPI
+    TODO Using REDIS Pubsub
+    TODO
+     */
     public synchronized String[] createChannel(String name, String[] players)
     {
         try

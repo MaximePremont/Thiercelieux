@@ -3,21 +3,12 @@ package net.samagames.werewolves.util;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import net.minecraft.server.v1_8_R3.DataWatcher;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
-import net.minecraft.server.v1_8_R3.MathHelper;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_8_R3.PacketPlayOutSpawnEntityLiving;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldBorder;
-import net.minecraft.server.v1_8_R3.PacketPlayOutWorldBorder.EnumWorldBorderAction;
-import net.minecraft.server.v1_8_R3.WorldBorder;
+import net.minecraft.server.v1_9_R2.*;
 import net.samagames.tools.Reflection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -58,11 +49,15 @@ public class PacketUtils
                 ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
     }
 
+    @SuppressWarnings("unchecked")
     private static DataWatcher getDataWatcher(String msg)
     {
         DataWatcher watcher = new DataWatcher(null);
         if (msg != null)
-            watcher.a(2, msg);
+            try
+            {
+                watcher.set((DataWatcherObject<String>) Reflection.getValue(null, Entity.class, true, "aA"), msg);
+            } catch (Exception ignored) {}
         return watcher;
     }
 
@@ -82,7 +77,7 @@ public class PacketUtils
         if (!(player instanceof CraftPlayer))
             return ;
         String json = "{text:\"" + msg + "\"}";
-        PacketPlayOutChat packet = new PacketPlayOutChat(ChatSerializer.a(json), (byte)2);
+        PacketPlayOutChat packet = new PacketPlayOutChat(IChatBaseComponent.ChatSerializer.a(json), (byte)2);
         ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
     }
 
@@ -93,8 +88,8 @@ public class PacketUtils
         WorldBorder wb = new WorldBorder();
         wb.setCenter(1000000D, 1000000D);
         wb.setSize(1D);
-        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, EnumWorldBorderAction.INITIALIZE));
-        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, EnumWorldBorderAction.SET_CENTER));
-        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, EnumWorldBorderAction.SET_SIZE));
+        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE));
+        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, PacketPlayOutWorldBorder.EnumWorldBorderAction.SET_CENTER));
+        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(new PacketPlayOutWorldBorder(wb, PacketPlayOutWorldBorder.EnumWorldBorderAction.SET_SIZE));
     }
 }

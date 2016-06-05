@@ -40,7 +40,7 @@ public class Witch extends WWClass
         house = null;
         stand = null;
         armorStands = null;
-        potions = new HashMap<UUID, Boolean[]>();
+        potions = new HashMap<>();
     }
 
     @Override
