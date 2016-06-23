@@ -20,7 +20,7 @@ public abstract class WWDisguise
         if (!(player instanceof CraftPlayer))
             return ;
         PacketUtils.broadcastDestroyPacket(player.getEntityId());
-        PacketUtils.broadcastSpawnEntityPacket(player.getEntityId(), type, player.getLocation(), null);
+        PacketUtils.broadcastSpawnEntityPacket(player.getEntityId(), this.type, player.getLocation(), null);
     }
 
     public void undisguisePlayer(Player player)

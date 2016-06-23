@@ -22,13 +22,13 @@ public class Angel extends WWClass
             "lors de la première nuit ou",
             "la première journée. Sinon, vous",
             "devenez un simple villageois."}, null);
-        turns = 0;
+        this.turns = 0;
     }
 
     @Override
     public boolean canPlayAtNight()
     {
-        turns++;
+        this.turns++;
         return false;
     }
 

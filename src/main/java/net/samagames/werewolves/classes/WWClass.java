@@ -61,22 +61,22 @@ public abstract class WWClass
 
     public String getPrefix()
     {
-        return prefix;
+        return this.prefix;
     }
 
     public String getLowercasePrefix()
     {
-        return prefix.toLowerCase();
+        return this.prefix.toLowerCase();
     }
 
     public String getName()
     {
-        return name;
+        return this.name;
     }
 
     public String[] getDescription()
     {
-        return description;
+        return this.description;
     }
 
     public boolean isSimilar(ItemStack item)
@@ -84,32 +84,32 @@ public abstract class WWClass
         if (item == null || item.getType() != this.item.getType())
             return false;
         ItemMeta meta = item.getItemMeta();
-        return meta != null && meta.getDisplayName().equals(name);
+        return meta != null && meta.getDisplayName().equals(this.name);
     }
 
     public WWDisguise getDisguise()
     {
-        return disguise;
+        return this.disguise;
     }
 
     public String getID()
     {
-        return id;
+        return this.id;
     }
 
     public ItemStack getItem()
     {
-        return item;
+        return this.item;
     }
 
     public void setDisabled(boolean d)
     {
-        disabled = d;
+        this.disabled = d;
     }
 
     public boolean isDisabled()
     {
-        return disabled;
+        return this.disabled;
     }
 
     /* Let's go for personnalisation methods */

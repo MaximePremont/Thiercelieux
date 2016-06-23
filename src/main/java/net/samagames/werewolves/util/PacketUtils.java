@@ -20,9 +20,7 @@ public class PacketUtils
     public static void broadcastDestroyPacket(int id)
     {
         PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(id);
-        for (Player p : Bukkit.getOnlinePlayers())
-            if (p instanceof CraftPlayer)
-                ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
+        Bukkit.getOnlinePlayers().stream().filter(p -> p instanceof CraftPlayer).forEach(p -> ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet));
     }
 
     public static void broadcastSpawnEntityPacket(int id, EntityType type, Location loc, String name)
@@ -44,9 +42,7 @@ public class PacketUtils
         } catch (NoSuchFieldException | IllegalAccessException e) {
             Bukkit.getLogger().log(Level.SEVERE, e.getMessage(), e);
         }
-        for (Player p : Bukkit.getOnlinePlayers())
-            if (p instanceof CraftPlayer)
-                ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
+        Bukkit.getOnlinePlayers().stream().filter(p -> p instanceof CraftPlayer).forEach(p -> ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet));
     }
 
     @SuppressWarnings("unchecked")
@@ -67,9 +63,7 @@ public class PacketUtils
             return ;
         PacketPlayOutNamedEntitySpawn packet = new PacketPlayOutNamedEntitySpawn(((CraftPlayer)player).getHandle());
         if (player.getUniqueId().equals(uuid))
-            for (Player p : Bukkit.getOnlinePlayers())
-                if (p instanceof CraftPlayer && !p.equals(player))
-                    ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packet);
+            Bukkit.getOnlinePlayers().stream().filter(p -> p instanceof CraftPlayer && !p.equals(player)).forEach(p -> ((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet));
     }
 
     public static void sendActionBarMessage(Player player, String msg)

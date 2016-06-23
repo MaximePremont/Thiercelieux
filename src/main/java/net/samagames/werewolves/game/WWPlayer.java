@@ -14,63 +14,63 @@ public class WWPlayer extends GamePlayer
 {
     private WWClass clazz;
     private WWHouse house;
-    private boolean secondturn;
+    private boolean secondTurn;
     private WWPlayer couple;
     private boolean isProtected;
 
     public WWPlayer(Player player)
     {
         super(player);
-        clazz = null;
-        house = null;
-        secondturn = false;
-        couple = null;
-        isProtected = false;
+        this.clazz = null;
+        this.house = null;
+        this.secondTurn = false;
+        this.couple = null;
+        this.isProtected = false;
     }
 
     public WWClass getPlayedClass()
     {
-        return clazz;
+        return this.clazz;
     }
 
     public void setPlayedClass(WWClass newClass)
     {
-        clazz = newClass;
+        this.clazz = newClass;
     }
 
     public void setHouse(WWHouse wwHouse)
     {
-        house = wwHouse;
+        this.house = wwHouse;
     }
 
     public WWHouse getHouse()
     {
-        return house;
+        return this.house;
     }
 
     public boolean isInSecondTurn()
     {
-        return secondturn;
+        return this.secondTurn;
     }
 
     public void setSecondTurn(boolean s)
     {
-        secondturn = s;
+        this.secondTurn = s;
     }
 
     public void setCouple(WWPlayer other)
     {
-        couple = other;
+        this.couple = other;
     }
 
     public WWPlayer getCouple()
     {
-        return couple;
+        return this.couple;
     }
 
     public boolean isInCouple()
     {
-        return couple != null;
+        return this.couple != null;
     }
 
     @Override
@@ -86,21 +86,21 @@ public class WWPlayer extends GamePlayer
         p.setFlying(true);
         for (Player player : Bukkit.getOnlinePlayers())
             player.hidePlayer(p);
-        if (house != null)
-            house.setDeadName(p.getName());
-        if (!moderator)
+        if (this.house != null)
+            this.house.setDeadName(p.getName());
+        if (!this.moderator)
             PacketUtils.sendWorldBorder(p);
     }
 
 
     public boolean isProtected()
     {
-        return isProtected;
+        return this.isProtected;
     }
 
     public void setProtected(boolean p)
     {
-        isProtected = p;
+        this.isProtected = p;
     }
 
     public void win()
@@ -111,7 +111,7 @@ public class WWPlayer extends GamePlayer
 
     public String getDisplayName()
     {
-        OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
+        OfflinePlayer off = Bukkit.getOfflinePlayer(this.uuid);
         String name;
         if (off.isOnline())
             name = off.getPlayer().getDisplayName();

@@ -36,9 +36,7 @@ public class Elder extends WWClass
     @Override
     public void handleNightTurnStart(WWPlugin plugin, Set<WWPlayer> players)
     {
-        for (WWPlayer wwp : players)
-            if (!protectedPlayers.contains(wwp.getUUID()))
-                protectedPlayers.add(wwp.getUUID());
+        players.stream().filter(wwp -> !this.protectedPlayers.contains(wwp.getUUID())).forEach(wwp -> this.protectedPlayers.add(wwp.getUUID()));
     }
 
     @Override
@@ -46,9 +44,9 @@ public class Elder extends WWClass
     {
         if (!(by instanceof WereWolf))
             return true;
-        if (!protectedPlayers.contains(player.getUUID()))
+        if (!this.protectedPlayers.contains(player.getUUID()))
             return true;
-        protectedPlayers.remove(player.getUUID());
+        this.protectedPlayers.remove(player.getUUID());
         return false;
     }
 

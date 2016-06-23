@@ -39,9 +39,9 @@ public class WWPlugin extends JavaPlugin
     @Override
     public void onEnable()
     {
-        api = SamaGamesAPI.get();
-        roles = new HashMap<>();
-        houses = new ArrayList<>();
+        this.api = SamaGamesAPI.get();
+        this.roles = new HashMap<>();
+        this.houses = new ArrayList<>();
 
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
         getServer().getPluginManager().registerEvents(new WorldListener(), this);
@@ -50,31 +50,31 @@ public class WWPlugin extends JavaPlugin
 
         loadClassesConfiguration();
         
-        if (api.getGameManager().getGameProperties().getOption("vocal", new JsonPrimitive(false)).getAsBoolean())
-            game = new VocalGame(this);
+        if (this.api.getGameManager().getGameProperties().getOption("vocal", new JsonPrimitive(false)).getAsBoolean())
+            this.game = new VocalGame(this);
         else
-            game = new TextGame(this);
-        api.getGameManager().registerGame(game);
+            this.game = new TextGame(this);
+        this.api.getGameManager().registerGame(this.game);
 
         int n = 0;
-        for (Integer i : roles.values())
+        for (Integer i : this.roles.values())
             n += i;
         JsonElement element;
         int i = 0;
-        while ((element = api.getGameManager().getGameProperties().getOption("house-" + i, null)) != null)
+        while ((element = this.api.getGameManager().getGameProperties().getOption("house-" + i, null)) != null)
         {
             WWHouse loc = JsonUtils.getHouse(element);
             if (loc != null)
             {
                 loc.safeReset();
-                houses.add(loc);
+                this.houses.add(loc);
             }
             i++;
         }
-        spawn = JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("spawn", null));
-        if (n != api.getGameManager().getGameProperties().getMaxSlots() ||
-                api.getGameManager().getGameProperties().getMaxSlots() != api.getGameManager().getGameProperties().getMinSlots() ||
-                n != houses.size() || spawn == null)
+        this.spawn = JsonUtils.getLocation(this.api.getGameManager().getGameProperties().getOption("spawn", null));
+        if (n != this.api.getGameManager().getGameProperties().getMaxSlots() ||
+                this.api.getGameManager().getGameProperties().getMaxSlots() != this.api.getGameManager().getGameProperties().getMinSlots() ||
+                n != this.houses.size() || this.spawn == null)
         {
             getServer().getLogger().severe("[WWPlugin] Problem in server slots (min != max != roles != houses) or missing spawn");
             getServer().shutdown();
@@ -85,45 +85,45 @@ public class WWPlugin extends JavaPlugin
     {
         for (WWClass clazz : WWClass.getValues())
         {
-            JsonElement element = api.getGameManager().getGameProperties().getOption(clazz.getID(), null);
+            JsonElement element = this.api.getGameManager().getGameProperties().getOption(clazz.getID(), null);
             if (element == null)
                 continue ;
             int n = element.getAsInt();
             if (n != 0)
             {
-                roles.put(clazz, n);
+                this.roles.put(clazz, n);
                 getServer().getLogger().info("[WWPlugin] Class loaded " + clazz.getID() + " x" + n);
                 if (clazz == WWClass.WITCH)
-                    ((Witch)clazz).setHouseLocation(JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("witch-house", null)),
-                            JsonUtils.getLocation(api.getGameManager().getGameProperties().getOption("witch-stand", null)));
+                    ((Witch)clazz).setHouseLocation(JsonUtils.getLocation(this.api.getGameManager().getGameProperties().getOption("witch-house", null)),
+                            JsonUtils.getLocation(this.api.getGameManager().getGameProperties().getOption("witch-stand", null)));
             }
         }
     }
 
     public WWGame getGame()
     {
-        return game;
+        return this.game;
     }
 
     public SamaGamesAPI getApi()
     {
-        return api;
+        return this.api;
     }
 
     public Map<WWClass, Integer> getRoles()
     {
-        return roles;
+        return this.roles;
     }
 
     public List<WWHouse> getHouses()
     {
-        return houses;
+        return this.houses;
     }
 
     public Location getRandomSpawn()
     {
         Random r = new Random();
         final double range = 3D;
-        return spawn.clone().add(r.nextDouble() * range - range / 2, 0, r.nextDouble() * range - range / 2);
+        return this.spawn.clone().add(r.nextDouble() * range - range / 2, 0, r.nextDouble() * range - range / 2);
     }
 }

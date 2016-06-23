@@ -19,7 +19,7 @@ public class SkinDisguise extends WWDisguise
     {
         if (!(player instanceof CraftPlayer))
             return ;
-        uuid.getClass();
+        this.uuid.getClass();
         //TODO
     }
 

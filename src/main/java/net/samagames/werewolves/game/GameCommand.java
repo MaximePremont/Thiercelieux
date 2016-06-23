@@ -12,27 +12,27 @@ public class GameCommand implements CommandExecutor
 
     public GameCommand(WWPlugin pl)
     {
-        plugin = pl;
+        this.plugin = pl;
     }
 
     @Override
     public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3)
     {
         if (arg3.length == 1 && "nextevent".equalsIgnoreCase(arg3[0]) && arg0.hasPermission("thiercelieux.nextevent"))
-            switch (plugin.getGame().getGameState())
+            switch (this.plugin.getGame().getGameState())
             {
             case DAY_1:
             case DAY_2:
-                plugin.getGame().nextDayEvent();
+                this.plugin.getGame().nextDayEvent();
                 break ;
             case NIGHT:
-                plugin.getGame().nextNightEvent();
+                this.plugin.getGame().nextNightEvent();
                 break ;
             default:
                 break ;
             }
         if (arg3.length == 1 && "check".equalsIgnoreCase(arg3[0]) && arg0.hasPermission("thiercelieux.check"))
-            plugin.getGame().checkEnd();
+            this.plugin.getGame().checkEnd();
         return true;
     }
 

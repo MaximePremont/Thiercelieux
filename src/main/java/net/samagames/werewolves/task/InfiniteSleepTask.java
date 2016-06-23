@@ -1,7 +1,6 @@
 package net.samagames.werewolves.task;
 
 import net.samagames.werewolves.WWPlugin;
-import net.samagames.werewolves.game.WWPlayer;
 import net.samagames.werewolves.util.GameState;
 
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
@@ -19,17 +18,14 @@ public class InfiniteSleepTask implements Runnable
     @Override
     public void run()
     {
-        if (plugin.getGame().getGameState() != GameState.NIGHT)
+        if (this.plugin.getGame().getGameState() != GameState.NIGHT)
             return ;
-        for (WWPlayer wwp : plugin.getGame().getInGamePlayers().values())
+        this.plugin.getGame().getInGamePlayers().values().stream().filter(wwp -> wwp.isOnline() && !wwp.isModerator() && !wwp.isSpectator()).forEach(wwp ->
         {
-            if (wwp.isOnline() && !wwp.isModerator() && !wwp.isSpectator())
-            {
-                Player p = wwp.getPlayerIfOnline();
-                if (p.isSleeping() && p instanceof CraftPlayer)
-                    ((CraftPlayer)p).getHandle().sleepTicks = 0;
-            }
-        }
+            Player p = wwp.getPlayerIfOnline();
+            if (p.isSleeping() && p instanceof CraftPlayer)
+                ((CraftPlayer) p).getHandle().sleepTicks = 0;
+        });
     }
 
 }

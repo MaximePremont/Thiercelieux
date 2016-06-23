@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import net.samagames.api.games.GamePlayer;
 import net.samagames.tools.Titles;
 import net.samagames.werewolves.WWPlugin;
 import net.samagames.werewolves.entities.SkinDisguise;
@@ -25,7 +26,7 @@ public class WereWolf extends WWClass
     public WereWolf()
     {
         super("werewolf", "Les", "&8&lLoup-Garou", new ItemStack(Material.ROTTEN_FLESH), new String[]{"La nuit, décidez d'une victime à dévorer. Miam"}, new SkinDisguise("da508ecc-dbd9-46c5-8095-47b91aa4ff5f"));
-        choices = new HashMap<>();
+        this.choices = new HashMap<>();
     }
 
     @Override
@@ -50,20 +51,18 @@ public class WereWolf extends WWClass
     public void handleNightTurnStart(WWPlugin plugin, Set<WWPlayer> players)
     {
         this.players = players;
-        choices.clear();
+        this.choices.clear();
         for (WWPlayer player : players)
-            choices.put(player.getUUID(), null);
+            this.choices.put(player.getUUID(), null);
         Set<WWPlayer> receivers = plugin.getGame().getPlayersByClass(WWClass.LITTLE_GIRL);
-        for (WWPlayer wwp : receivers)
-            if (wwp.isOnline())
-                Titles.sendTitle(wwp.getPlayerIfOnline(), 5, 50, 5, "", WWClass.LITTLE_GIRL.getTextAtNight());
+        receivers.stream().filter(GamePlayer::isOnline).forEach(wwp -> Titles.sendTitle(wwp.getPlayerIfOnline(), 5, 50, 5, "", WWClass.LITTLE_GIRL.getTextAtNight()));
     }
 
     @Override
     public void handleNightTurnEnd(WWPlugin plugin, Set<WWPlayer> players)
     {
         this.players.clear();
-        List<UUID> tops = plugin.getGame().getTopVotes(choices);
+        List<UUID> tops = plugin.getGame().getTopVotes(this.choices);
         String msg;
         if (tops.size() != 1)
             msg = ChatColor.RED + "Aucun choix de fait, il n'y aura pas de victime des loups-garous ce soir.";
@@ -79,10 +78,8 @@ public class WereWolf extends WWClass
                 msg = plugin.getGame().getCoherenceMachine().getGameTag() + ChatColor.RED + " La victime de ce soir des loups-garous est : " + player.getDisplayName() + " !";
             }
         }
-        for (WWPlayer wwp : players)
-            if (wwp.isOnline())
-                wwp.getPlayerIfOnline().sendMessage(msg);
-        choices.clear();
+        players.stream().filter(GamePlayer::isOnline).forEach(wwp -> wwp.getPlayerIfOnline().sendMessage(msg));
+        this.choices.clear();
     }
 
     @Override
@@ -93,10 +90,10 @@ public class WereWolf extends WWClass
             source.getPlayerIfOnline().sendMessage(ChatColor.RED + "Ce joueur est déconnecté.");
             return ;
         }
-        if (choices.containsKey(source.getUUID()))
+        if (this.choices.containsKey(source.getUUID()))
         {
-            choices.put(source.getUUID(), target.getUUID());
-            for (WWPlayer wwp : players)
+            this.choices.put(source.getUUID(), target.getUUID());
+            for (WWPlayer wwp : this.players)
             {
                 String msg = ChatColor.RED + "[LOUPS] " + ChatColor.GRAY + source.getDisplayName() + " a voté pour " + target.getDisplayName();
                 Player player = wwp.getPlayerIfOnline();

@@ -25,26 +25,24 @@ public class WWHouse
     {
         this.display = display;
         this.bed = bed;
-        armorstand = null;
+        this.armorstand = null;
     }
 
     public void safeReset()
     {
-        display.getWorld().loadChunk(display.getBlockX() / 16, display.getBlockZ() / 16);
-        for (Entity e : display.getWorld().getEntities())
-            if (e instanceof ArmorStand)
-                e.remove();
+        this.display.getWorld().loadChunk(this.display.getBlockX() / 16, this.display.getBlockZ() / 16);
+        this.display.getWorld().getEntities().stream().filter(e -> e instanceof ArmorStand).forEach(Entity::remove);
     }
 
     public void displayName(String name)
     {
-        if (armorstand != null)
+        if (this.armorstand != null)
             return ;
-        armorstand = (ArmorStand)display.getWorld().spawnEntity(display, EntityType.ARMOR_STAND);
-        armorstand.setCustomNameVisible(true);
-        armorstand.setCustomName(ChatColor.GOLD + "Maison de " + name);
-        armorstand.setVisible(false);
-        armorstand.setGravity(false);
+        this.armorstand = (ArmorStand)this.display.getWorld().spawnEntity(this.display, EntityType.ARMOR_STAND);
+        this.armorstand.setCustomNameVisible(true);
+        this.armorstand.setCustomName(ChatColor.GOLD + "Maison de " + name);
+        this.armorstand.setVisible(false);
+        this.armorstand.setGravity(false);
     }
 
     public void teleportToBed(Player player)
@@ -52,14 +50,14 @@ public class WWHouse
         if (!(player instanceof CraftPlayer))
             return ;
         player.setSleepingIgnored(true);
-        player.teleport(bed);
+        player.teleport(this.bed);
         player.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(Integer.MAX_VALUE, 10));
         try {
-            EnumBedResult result = ((CraftPlayer)player).getHandle().a(new BlockPosition(bed.getBlockX(), bed.getBlockY(), bed.getBlockZ()));
+            EnumBedResult result = ((CraftPlayer)player).getHandle().a(new BlockPosition(this.bed.getBlockX(), this.bed.getBlockY(), this.bed.getBlockZ()));
             if (result != EnumBedResult.OK)
-                Bukkit.getLogger().severe("[WereWolves] Error : can't set player " + player.getName() + " in bed (" + bed.getBlockX() + ", " + bed.getBlockY() + ", " + bed.getBlockZ() + ", result=" + result + ").");
+                Bukkit.getLogger().severe("[WereWolves] Error : can't set player " + player.getName() + " in bed (" + this.bed.getBlockX() + ", " + this.bed.getBlockY() + ", " + this.bed.getBlockZ() + ", result=" + result + ").");
         } catch (IllegalArgumentException ex) {
-            Bukkit.getLogger().severe("[WereWolves] Invalid bed location ! (" + bed.getBlockX() + ", " + bed.getBlockY() + ", " + bed.getBlockZ() + ").");
+            Bukkit.getLogger().severe("[WereWolves] Invalid bed location ! (" + this.bed.getBlockX() + ", " + this.bed.getBlockY() + ", " + this.bed.getBlockZ() + ").");
             Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
@@ -74,8 +72,8 @@ public class WWHouse
 
     public void setDeadName(String name)
     {
-        if (armorstand == null)
+        if (this.armorstand == null)
             return ;
-        armorstand.setCustomName(ChatColor.RED + "✞ Maison de " + name + ChatColor.RED + " ✞");
+        this.armorstand.setCustomName(ChatColor.RED + "✞ Maison de " + name + ChatColor.RED + " ✞");
     }
 }
